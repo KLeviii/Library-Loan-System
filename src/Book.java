@@ -1,20 +1,26 @@
 public abstract class Book {
-    private String id;
-    private String title;
-    private String author;
-    private int loanDuration;
-    private static int count;
+    private final String id;
+    private final String title;
+    private final String author;
 
-    public Book(String id, String title, String author, int loanDuration) {
+    public Book(String id, String title, String author) {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.loanDuration = loanDuration;
     }
 
-    public void checkId(String id) throws IllegalArgumentException {
-
-
+    public String getId() {
+        return id;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public abstract void checkId(String id) throws IllegalArgumentException;
 
 }
