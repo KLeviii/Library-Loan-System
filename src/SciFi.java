@@ -1,7 +1,7 @@
 import java.util.Objects;
 
 public class SciFi extends Book {
-    private static int loanDuration = 14;
+    private static final int loanDuration = 14;
     private static int count = 0;
 
     public SciFi(String id, String title, String author) {
