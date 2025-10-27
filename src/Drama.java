@@ -4,6 +4,11 @@ public class Drama extends Book{
     private static final int loanDuration = 28;
     private static int count = 0;
 
+    public Drama(String id, String title, String author, Member loanedTo) {
+        super(id, title, author, loanedTo);
+        count++;
+    }
+
     public Drama(String id, String title, String author) {
         super(id, title, author);
         count++;
@@ -18,9 +23,14 @@ public class Drama extends Book{
     }
 
     @Override
-    public void checkId(String id) throws IllegalArgumentException {
+    public void checkBookId(String id) throws IllegalArgumentException {
         if ((id.length() != 6) || (!Objects.equals(id.split("-")[0], "DR")) || id.split("-")[1].isEmpty()) {
-            throw new IllegalArgumentException("Wrong ID!");
+            throw new IllegalArgumentException("Invalid ID!");
         }
+    }
+
+    @Override
+    public void checkMember(Member member) throws IllegalArgumentException {
+
     }
 }
