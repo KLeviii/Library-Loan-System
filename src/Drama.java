@@ -4,7 +4,7 @@ public class Drama extends Book{
     private static final int loanDuration = 28;
     private static int count = 0;
 
-    public Drama(String id, String title, String author, Member loanedTo) {
+    public Drama(String id, String title, String author, int loanedTo) {
         super(id, title, author, loanedTo);
         count++;
     }
@@ -30,7 +30,7 @@ public class Drama extends Book{
     }
 
     @Override
-    public void checkMember(Member member) throws IllegalArgumentException {
+    public void checkMember(int member) throws IllegalArgumentException {
 
     }
 }
