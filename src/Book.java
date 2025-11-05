@@ -43,7 +43,22 @@ public abstract class Book {
         this.loanedTo = loanedTo;
     }
 
-    public abstract void checkBookId(String id) throws IllegalArgumentException;
+    public void checkBookId(String bookid) throws IllegalArgumentException {
+        boolean foundBook = false;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("books.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine())!=null) {
+                if (line.split(";")[1].equals(bookid)){
+                    foundBook = true;
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error reading the books.");
+        }
+        if (!foundBook){
+            throw new IllegalArgumentException("Couldn't find this member!");
+        }
+    }
 
     public void checkMember(int memberId) throws IllegalArgumentException{
         boolean foundMember = false;
@@ -55,10 +70,10 @@ public abstract class Book {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading file.");
+            throw new IllegalArgumentException("Error reading the members.");
         }
         if (!foundMember){
-            throw new IllegalArgumentException("Nem található ilyen tag!");
+            throw new IllegalArgumentException("Couldn't find this member!");
         }
     }
 }

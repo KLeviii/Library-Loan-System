@@ -21,16 +21,4 @@ public class Drama extends Book{
     public static int getCount() {
         return count;
     }
-
-    @Override
-    public void checkBookId(String id) throws IllegalArgumentException {
-        if ((id.length() != 6) || (!Objects.equals(id.split("-")[0], "DR")) || id.split("-")[1].isEmpty()) {
-            throw new IllegalArgumentException("Invalid ID!");
-        }
-    }
-
-    @Override
-    public void checkMember(int member) throws IllegalArgumentException {
-
-    }
 }
