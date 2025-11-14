@@ -8,7 +8,6 @@ public abstract class Book {
     private final String author;
     private int loanedTo;
 
-
     public Book(String id, String title, String author, int loanedTo) {
         this.id = id;
         this.title = title;
@@ -43,37 +42,31 @@ public abstract class Book {
         this.loanedTo = loanedTo;
     }
 
-    public void checkBookId(String bookid) throws IllegalArgumentException {
-        boolean foundBook = false;
+    public boolean checkBookId(String bookid) throws IllegalArgumentException {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("books.txt"))) {
             String line;
             while ((line = bufferedReader.readLine())!=null) {
                 if (line.split(";")[1].equals(bookid)){
-                    foundBook = true;
+                    return true;
                 }
             }
+            throw new IllegalArgumentException("Couldn't find this member!");
         } catch (IOException e) {
             throw new IllegalArgumentException("Error reading the books.");
         }
-        if (!foundBook){
-            throw new IllegalArgumentException("Couldn't find this member!");
-        }
     }
 
-    public void checkMember(int memberId) throws IllegalArgumentException{
-        boolean foundMember = false;
+    public boolean checkMember(int memberId) throws IllegalArgumentException{
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("members.txt"))) {
             String line;
             while ((line = bufferedReader.readLine())!=null) {
                 if (Integer.parseInt(line.split(";")[1]) == memberId){
-                    foundMember = true;
+                    return true;
                 }
             }
+            throw new IllegalArgumentException("Couldn't find this member!");
         } catch (IOException e) {
             throw new IllegalArgumentException("Error reading the members.");
-        }
-        if (!foundMember){
-            throw new IllegalArgumentException("Couldn't find this member!");
         }
     }
 }
