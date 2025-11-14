@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Technical extends Book{
     private static final int loanDuration = 7;
     private static int count = 0;
