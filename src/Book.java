@@ -1,8 +1,6 @@
-import javax.swing.plaf.IconUIResource;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 public abstract class Book {
     private final String id;
@@ -45,48 +43,37 @@ public abstract class Book {
         this.loanedTo = loanedTo;
     }
 
-    public void checkBookId(String bookid) throws InvalidReadingException, InvalidBookIdException {
+    public void checkBookId(String bookid) throws IllegalArgumentException {
         boolean foundBook = false;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("books.txt"))) {
             String line;
             while ((line = bufferedReader.readLine())!=null) {
-                StringTokenizer st = new StringTokenizer(line,";");
-                if (st.hasMoreTokens()){
-                    String currentBookId = st.nextToken();
-                    if (currentBookId.equals(bookid)){
-                        foundBook = true;
-                        break;
-                    }
+                if (line.split(";")[1].equals(bookid)){
+                    foundBook = true;
                 }
             }
-        } catch (IOException ioe) {
-            throw new InvalidReadingException("Error reading the books.");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error reading the books.");
         }
         if (!foundBook){
-            throw new InvalidBookIdException("Couldn't find this book!");
+            throw new IllegalArgumentException("Couldn't find this member!");
         }
     }
 
-    public void checkMember(int memberId) throws InvalidReadingException, InvalidMemberException{
+    public void checkMember(int memberId) throws IllegalArgumentException{
         boolean foundMember = false;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("members.txt"))) {
             String line;
             while ((line = bufferedReader.readLine())!=null) {
-                StringTokenizer st = new StringTokenizer(line, ";");
-                if(st.hasMoreTokens()){
-                    String currentMemberId = st.nextToken();
-                    if (Integer.parseInt(currentMemberId) == memberId){
-                        foundMember = true;
-                        break;
-                    }
+                if (Integer.parseInt(line.split(";")[1]) == memberId){
+                    foundMember = true;
                 }
-
             }
-        } catch (IOException ioe) {
-            throw new InvalidReadingException("Error reading the members.");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error reading the members.");
         }
         if (!foundMember){
-            throw new InvalidMemberException("Couldn't find this member!");
+            throw new IllegalArgumentException("Couldn't find this member!");
         }
     }
 }
