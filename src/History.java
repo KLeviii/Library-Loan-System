@@ -1,4 +1,4 @@
-public class History extends Book{
+public final class History extends Book{
     private static final int loanDuration = 21;
     private static int count = 0;
 

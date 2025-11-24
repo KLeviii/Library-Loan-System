@@ -1,4 +1,4 @@
-public class Children extends Book {
+public final class Children extends Book {
     private static final int loanDuration = 14;
     private static int count = 0;
 
