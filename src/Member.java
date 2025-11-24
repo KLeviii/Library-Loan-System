@@ -19,9 +19,11 @@ public class Member {
     // TODO: Customize toString() method
     @Override
     public String toString() {
-        return "Member{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                '}';
+        return  "╔══════════════════════════════╗\n" +
+                "║           MEMBER             ║\n" +
+                "╠══════════════════════════════╣\n" +
+                "║ Name: " + name + "\n" +
+                "║ ID:   " + id + "\n" +
+                "╚══════════════════════════════╝";
     }
 }
