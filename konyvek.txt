@@ -1,4 +1,3 @@
-id;cím;szerző
 SF-001;A Holo Felkelés;Eszter Thompson
 SF-002;A Kvantum Titok;Olivia Garcia
 SF-003;A Holo Kapcsolat;William Moore
