@@ -997,7 +997,6 @@ SF-996;A Neutron Invázió;William Szabó
 SF-997;A Fotón Varázs;Richard Molnár
 SF-998;A Kvantum Kaland;János Johnson
 SF-999;A Warp Kaland;Katalin Martinez
-SF-1000;A Plazma Exodus;András Szabó
 DR-001;Otthon és Visszhang;Olivia Horváth
 DR-002;Szavak és Család;Mária Miller
 DR-003;Szerelem és Könnyek;András Jackson
@@ -1997,7 +1996,6 @@ DR-996;Visszatérés és Igazság;Joseph Martin
 DR-997;Fájdalom és Veszteség;William Kovács
 DR-998;Szenvedély és Emlékezet;András Anderson
 DR-999;Bocsánat és Igazság;Mária Rodriguez
-DR-1000;Bocsánat és Idegen;Thomas Moore
 HS-001;A Oszmán Bukás;Gábor Harris
 HS-002;A Barokk Változás;James Martinez
 HS-003;A Viking Bukás;Gábor Varga
@@ -2997,7 +2995,6 @@ HS-996;A Viktoriánus Hadjárat;Robert Smith
 HS-997;A Világháború Béke;Zsuzsanna Miller
 HS-998;A Habsburg Dinasztia;Olivia Varga
 HS-999;A Bizánci Felemelkedés;Mihály Farkas
-HS-1000;A Ipari Civilizáció;Judit Brown
 CH-001;A Mesés Robot;István Garcia
 CH-002;A Mesés Sárkány;David Farkas
 CH-003;A Bátor Királyné;András Rodriguez
@@ -3997,7 +3994,6 @@ CH-996;A Kedves Cica;Amelia Farkas
 CH-997;A Pajkos Egér;István Szabó
 CH-998;A Mesés Medve;Eszter Nagy
 CH-999;A Mesés Egér;Richard Johnson
-CH-1000;A Kicsi Pillangó;Péter Anderson
 TC-001;Mérnöki Rendszer;Thomas Smith
 TC-002;Innováció Alkalmazás;Robert Varga
 TC-003;Pénzügy Elmélet;James Farkas
@@ -4997,4 +4993,3 @@ TC-996;Orvosi Haladó;Robert Taylor
 TC-997;Mérnöki Professzionális;István Thompson
 TC-998;Pszichológia Technológia;Joseph Thomas
 TC-999;Közgazdaságtan Rendszer;Richard Thompson
-TC-1000;Programozás Elmélet;Judit Jones
