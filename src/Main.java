@@ -1,6 +1,4 @@
 import java.util.Scanner;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 
 public class Main {
     public static void main(String[] args) {
@@ -72,8 +70,6 @@ public class Main {
             }
 
             display.print("┋ Action: ");
-
-
 
         }
     }
