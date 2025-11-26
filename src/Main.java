@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 
 public class Main {
     public static void main(String[] args) {
-        boolean isCapsLockOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
 
         String RESET = "\u001B[0m";
         String RED = "\u001B[31m";
@@ -12,6 +11,7 @@ public class Main {
         String CYAN = "\u001B[36m";
         String BLUE = "\u001B[34m";
         String GREEN = "\u001B[32m";
+
         Display display = new Display();
         display.println("╔══════════════════════════════╗");
         display.println("║"+YELLOW+"LIBRARY LOAN SYSTEM"+RESET+"           ║");
@@ -27,7 +27,7 @@ public class Main {
                 display.println("║"+GREEN+ "1. Loan a book"+RESET+"                ║");
                 display.println("║"+BLUE+ "2. Give back a book"+RESET+"           ║");
                 display.println("║"+CYAN+ "3. Statistics"+RESET+"                 ║");
-                display.println("║"+RED+ "Esc"+RESET+"                       ║");
+                display.println("║"+RED+ "0. Exit"+RESET+"                       ║");
                 display.println("╚══════════════════════════════╝");
                 display.print("┋ Action: ");
                 int action = Integer.parseInt(sc.nextLine());
@@ -62,7 +62,6 @@ public class Main {
                         break;
                     default:
                         throw new InvalidNumberInputExceptionAtUserInterface("Invalid number, try  again with 1,2 or 3");
-
                 }
             } catch (InvalidNumberInputExceptionAtUserInterface inieaui) {
                 display.println("╔═══════════════════════════════════════════════════╗");
@@ -73,6 +72,8 @@ public class Main {
             }
 
             display.print("┋ Action: ");
+
+
 
         }
     }
