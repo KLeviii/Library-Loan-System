@@ -60,11 +60,11 @@ A rendszer egy egyszerű könyvtári nyilvántartó és kölcsönző rendszer, a
 3. A rendszer megjeleníti a könyveket az azonosítójuk számrészének növekvő sorrendjében
 4. Megjelenítési formátum minden könyvhöz:
    ```
-   [AZONOSÍTÓ] Cím - Szerző - STÁTUSZ
+   [AZONOSÍTÓ] Cím by Szerző - STÁTUSZ
    ```
    - **Elérhető könyvek:** Alapértelmezett színben jelennek meg
-   - **Kölcsönzött könyvek:** Sárgával, "[KÖLCSÖNÖZVE]" jelzéssel és várható visszahozási dátummal
-   - Példa: `[SF-042] Dűne - Frank Herbert - [KÖLCSÖNÖZVE 2025-12-15-ig]`
+   - **Kölcsönzött könyvek:** Sárgával, "[LOANED]" jelzéssel és várható visszahozási dátummal
+   - Példa: `[SF-042] Dune by Frank Herbert - [LOANED until 2025-12-15]`
 
 **Követelmények:**
 - A könyveket az azonosító számrészének sorrendjében kell rendezni (SF-001, SF-002, SF-010, stb.)
@@ -74,7 +74,7 @@ A rendszer egy egyszerű könyvtári nyilvántartó és kölcsönző rendszer, a
 
 ### 3.2 Könyv Kölcsönzése
 
-**Leírás:** A felhasználók kölcsönözhetnek egy könyvet az azonosító és tag-azonosítás megadásával.
+**Leírás:** A felhasználók kölcsönözhetnek egy könyvet az azonosító és tag-azonosító megadásával.
 
 **Folyamat:**
 1. Felhasználó megadja a könyv azonosítóját
@@ -87,7 +87,7 @@ A rendszer egy egyszerű könyvtári nyilvántartó és kölcsönző rendszer, a
      - Bekéri a nevet
      - Generál egyedi tagsági azonosítót (tartomány: 1-999999, szekvenciális)
      - Elmenti az új tag adatait
-     - Megerősítést jelenít meg: "Tagság létrehozva! Az azonosítód: XXXXXX"
+     - Megerősítést jelenít meg:  "Membership created! Your ID: XXXXXX"
 4. Rendszer ellenőrzi, hogy a tagnak kevesebb mint 3 aktív kölcsönzése van-e
 5. Rendszer rögzíti a kölcsönzést az aktuális dátummal
 6. Rendszer frissíti az összes releváns adatfájlt
@@ -115,7 +115,7 @@ A rendszer egy egyszerű könyvtári nyilvántartó és kölcsönző rendszer, a
 2. Rendszer megjeleníti a tag aktív kölcsönzéseit kölcsönzési dátum szerint rendezve (legrégebbi először)
 3. Megjelenítési formátum:
    ```
-   [AZONOSÍTÓ] Cím - Kölcsönözve: ÉÉÉÉ-HH-NN - Határidő: ÉÉÉÉ-HH-NN [KÉSEDELMES: +X nap, 50 Ft/nap = X Ft]
+   [AZONOSÍTÓ] Cím - Loaned: ÉÉÉÉ-HH-NN - Due: ÉÉÉÉ-HH-NN [OVERDUE: +X days, 50 Ft/day = Y HUF]
    ```
    - **Késedelmes könyvek:** Pirossal jelennek meg a büntetésszámítással
    - **Időben lévő könyvek:** Zölddel jelennek meg
@@ -130,7 +130,7 @@ A rendszer egy egyszerű könyvtári nyilvántartó és kölcsönző rendszer, a
 
 **Büntetésszámítás:**
 ```
-Büntetés = (Aktuális Dátum - Határidő) × 50 Ft/nap
+(aktuális dátum - határidő) × 50 Ft/nap
 ```
 
 **Követelmények:**
@@ -159,11 +159,11 @@ Büntetés = (Aktuális Dátum - Határidő) × 50 Ft/nap
 
 **Megjelenítési Formátum:**
 ```
-Tagsági Azonosító | Tag Neve     | Könyv Azonosító | Késedelmes Napok | Büntetés Összege
-------------------|--------------|-----------------|------------------|------------------
-000123            | Kovács János | SF-005          | 5                | 250 Ft
-000456            | Nagy Anna    | DR-012          | 12               | 600 Ft
-                                                     ÖSSZESEN:         | 850 Ft
+Member ID | Member Name | Book ID | Days Overdue | Fine Amount
+----------|-------------|---------|--------------|------------
+000123    | John Doe    | SF-005  | 5            | 250 HUF
+000456    | Jane Smith  | DR-012  | 12           | 600 HUF
+                                   TOTAL:        | 850 HUF
 ```
 
 **Követelmények:**
@@ -182,12 +182,12 @@ Tagsági Azonosító | Tag Neve     | Könyv Azonosító | Késedelmes Napok | B
 1. **Legnépszerűbb Kategória**
    - Mérőszám: Összes kölcsönzések száma (minden idők) kategóriánként
    - Megjelenítés: Kategória név és kölcsönzések száma
-   - Példa: "Legnépszerűbb Kategória: Sci-fi (142 kölcsönzés)"
+   - Példa:  "Most Popular Category: Sci-fi (142 loans)"
 
 2. **Leggyakrabban Késő Tag**
    - Mérőszám: Késedelmes visszahozások száma tagonként
    - Megjelenítés: Tagsági azonosító, név és késések száma
-   - Példa: "Leggyakrabban Késő: Kovács János (Azonosító: 000123) - 8 késés"
+   - Példa: "Most Frequently Late: John Doe (ID: 000123) - 8 late returns"
 
 **További Statisztikák (Opcionális Megjelenítés):**
 - Összes könyv a leltárban
@@ -204,7 +204,7 @@ Tagsági Azonosító | Tag Neve     | Könyv Azonosító | Késedelmes Napok | B
 - Érvényes címek példái: "1984", "Harry Potter és a bölcsek köve", "X-Men - Kezdetek"
 
 **Szerző Név Érvényesítése:**
-- Engedélyezett karakterek: Magyar ABC betűi, szóközök, kötőjel (-)
+- Engedélyezett karakterek: Magyar ABC betűi, szóközök, kötőjel (-), aposztróf (')
 - Hossz: 2-100 karakter
 - Legalább egy betűt kell tartalmaznia
 - Érvényes nevek példái: "Isaac Asimov", "Móra Ferenc", "Gárdonyi Géza"
@@ -426,6 +426,7 @@ TC-003;Clean Code;Robert C. Martin
 ```
 
 **Szabályok:**
+- Könyv azonosító számrésze nullával kitöltve 3 számjegyig
 - Egy könyv soronként
 - Pontosvessző (;) elválasztó
 - Nincs lezáró pontosvessző
@@ -446,6 +447,8 @@ TC-003;Clean Code;Robert C. Martin
 **Szabályok:**
 - Tagsági azonosító nullával kitöltve 6 számjegyig
 - Egy tag soronként
+- Pontosvessző (;) elválasztó
+- Nincs lezáró pontosvessző
 - UTF-8 kódolás
 
 ---
@@ -462,7 +465,10 @@ HS-012;000042;2025-11-15
 
 **Szabályok:**
 - Dátum formátum: ÉÉÉÉ-HH-NN (ISO 8601)
+- Tagsági azonosító nullával kitöltve 6 számjegyig
 - Egy kölcsönzés soronként
+- Pontosvessző (;) elválasztó
+- Nincs lezáró pontosvessző
 - Csak aktív kölcsönzések (visszahozott könyvek törlődnek)
 
 ---
@@ -480,7 +486,10 @@ HS-012;000042;2025-11-15
 - Összeg forintban (egész szám)
 - Késedelmes dátum az a nap, amikor a könyv késedelmessé vált (határidő + 1 nap)
 - Büntetések megmaradnak kifizetésig/törölésig
+- Könyv azonosító számrésze nullával kitöltve 3 számjegyig
 - Egy büntetés soronként könyvenként
+- Pontosvessző (;) elválasztó
+- Nincs lezáró pontosvessző
 
 ---
 
@@ -488,7 +497,7 @@ HS-012;000042;2025-11-15
 
 **Frissítési Időzítés:**
 - A fájlok **azonnal** frissülnek minden művelet után (kölcsönzés, visszahozás, tag létrehozás)
-- Atomi írási műveletek használata (írás ideiglenes fájlba, majd átnevezés) az adatsérülés megelőzéséhez
+- Atomikus írási műveletek használata (írás ideiglenes fájlba, majd átnevezés) az adatsérülés megelőzéséhez
 
 **Frissítési Műveletek:**
 
@@ -517,8 +526,8 @@ HS-012;000042;2025-11-15
 
 **Példa üzenetek:**
 ```
-"Érvénytelen könyv azonosító: 'XY-123'. Elvárt formátum: [SF|DR|HS|CH|TC]-[001-999]"
-"Az 'SF-999' könyv azonosító nem létezik a könyvtárban."
+"Invalid book ID: 'XY-123'. Expected format: [SF|DR|HS|CH|TC]-[001-999]"
+"Book ID 'SF-999' does not exist in the library."
 ```
 
 ---
@@ -531,9 +540,9 @@ HS-012;000042;2025-11-15
 
 **Példa üzenetek:**
 ```
-"Érvénytelen tagsági azonosító: 'ABC123'. Elvárt numerikus azonosító: 000001-999999"
-"A '000999' tagsági azonosító nem található."
-"A '000042' tag elérte a maximum kölcsönzési limitet (3 könyv)."
+"Invalid member ID: 'ABC123'. Expected numeric ID: 000001-999999"
+"Member ID '000999' not found."
+"Member '000042' has reached the maximum loan limit (3 books)."
 ```
 
 ---
@@ -546,8 +555,8 @@ HS-012;000042;2025-11-15
 
 **Példa üzenetek:**
 ```
-"Érvénytelen név: 'János123'. A nevek csak betűket, szóközöket és kötőjeleket tartalmazhatnak."
-"Érvénytelen menüválasztás: '9'. Kérjük válasszon 1-6 között."
+"Invalid name: 'John123'. Names can only contain letters, spaces, and hyphens."
+"Invalid menu choice: '9'. Please select 1-6."
 ```
 
 ---
@@ -560,9 +569,9 @@ HS-012;000042;2025-11-15
 
 **Példa üzenetek:**
 ```
-"Hiba a 'loanableBooks.txt' olvasásakor: Fájl nem található."
-"Adatsérülés észlelve a 'members.txt' fájlban a 42. sorban."
-"Nem sikerült menteni a kölcsönzési adatokat. A változások visszagörgetésre kerültek."
+"Error reading 'loanableBooks.txt': File not found."
+"Data corruption detected in 'members.txt' at line 42."
+"Failed to save loan data. Changes have been rolled back."
 ```
 
 ---
@@ -570,11 +579,11 @@ HS-012;000042;2025-11-15
 ### 6.2 Kivételkezelési Stratégia
 
 **Felhasználói Felület Szintjén:**
-1. Minden kivételt elkapni a UI határon
+1. Minden kivételt elkapni a TUI határon
 2. Felhasználóbarát hibaüzenetek megjelenítése
 3. Helyreállítási lehetőségek felajánlása:
-   - "Nyomj Entert a menübe való visszatéréshez"
-   - "Nyomj R-t az újrapróbálkozáshoz"
+   - "Press Enter to return to menu"
+   - "Press R to retry"
 4. Az alkalmazás soha ne omoljon össze
 
 **Példa:**
@@ -588,7 +597,7 @@ try {
     displayError(e.getMessage());
     offerMemberCreation();
 } catch (FileOperationException e) {
-    displayError("Rendszerhiba: " + e.getMessage());
+    displayError("System error: " + e.getMessage());
     logError(e);
     promptReturnToMenu();
 }
@@ -607,19 +616,19 @@ try {
 
 **Színséma:**
 ```
-┌─────────────────────────────────┐
-│ Elem             │ Színkód      │
-├──────────────────┼──────────────┤
-│ Cím/Fejléc       │ Cián (Félkövér) │
-│ Menü Opciók      │ Fehér        │
-│ Kiválasztott Opció│ Zöld (Félkövér) │
-│ Elérhető Könyvek │ Zöld         │
-│ Kölcsönzött Könyvek│ Sárga      │
-│ Késedelmes Tételek│ Piros (Félkövér) │
-│ Hibaüzenetek     │ Piros        │
-│ Siker Üzenetek   │ Zöld         │
-│ Bemenet Prompt   │ Fehér        │
-└─────────────────────────────────┘
+┌────────────────────────────────────────┐
+│ Elem                │ Színkód          │
+├─────────────────────┼──────────────────┤
+│ Cím/Fejléc          │ Cián (Félkövér)  │
+│ Menü Opciók         │ Fehér            │
+│ Kiválasztott Opció  │ Zöld (Félkövér)  │
+│ Elérhető Könyvek    │ Zöld             │
+│ Kölcsönzött Könyvek │ Sárga            │
+│ Késedelmes Tételek  │ Piros (Félkövér) │
+│ Hibaüzenetek        │ Piros            │
+│ Siker Üzenetek      │ Zöld             │
+│ Bemenet Prompt      │ Fehér            │
+└────────────────────────────────────────┘
 ```
 
 ---
@@ -628,24 +637,24 @@ try {
 
 ```
 ╔══════════════════════════════════════╗
-║   KÖNYVTÁRI KEZELŐ RENDSZER          ║
+║   LIBRARY MANAGEMENT SYSTEM          ║
 ╚══════════════════════════════════════╝
 
-1. Könyvek Listázása Kategóriánként
-2. Könyv Kölcsönzése
-3. Könyv Visszahozása
-4. Könyvek Keresése
-5. Összes Büntetés Listázása
-6. Statisztikák Megtekintése
-7. Kilépés
+1. List Books by Category
+2. Loan a Book
+3. Return a Book
+4. Search Books
+5. List All Fines
+6. View Statistics
+7. Exit
 
-Válasszon egy opciót (1-7): _
+Select an option (1-7): _
 ```
 
 **Navigáció:**
 - Számgombok (1-7) menüopciók kiválasztásához
-- Enter megerősítéshez
-- ESC előző menübe való visszatéréshez (almenükben)
+- Enter vagy y/n kérés a megerősítéshez
+- ESC vagy Enter az előző menübe való visszatéréshez (almenükben)
 - Nyíl gombok a lista nézetekben történő kiválasztáshoz (opcionális fejlesztés)
 
 ---
@@ -656,32 +665,29 @@ Válasszon egy opciót (1-7): _
 
 ```
 ╔══════════════════════════════════════╗
-║   KATEGÓRIA VÁLASZTÁS                ║
+║   SELECT CATEGORY                    ║
 ╚══════════════════════════════════════╝
 
-1. Sci-fi (14 könyv)
-2. Dráma (8 könyv)
-3. Történelem (12 könyv)
-4. Gyermekkönyv (10 könyv)
-5. Szakkönyv (6 könyv)
-6. Vissza a Főmenübe
+1. Sci-fi (14 books)
+2. Drama (8 books)
+3. History (12 books)
+4. Children (10 books)
+5. Technical (6 books)
+6. Back to Main Menu
 
-Válasszon kategóriát (1-6): 1
+Select category (1-6): 1
 
 ╔══════════════════════════════════════╗
-║   SCI-FI KÖNYVEK                     ║
+║   SCI-FI BOOKS                       ║
 ╚══════════════════════════════════════╝
 
-[SF-001] Dűne - Frank Herbert
-         [ELÉRHETŐ]
+[SF-001] Dune by Frank Herbert - [AVAILABLE]
 
-[SF-042] Alapítvány - Isaac Asimov
-         [KÖLCSÖNÖZVE 2025-12-15-ig]
+[SF-042] Foundation by Isaac Asimov - [LOANED until 2025-12-15]
 
-[SF-105] Mentőexpedíció - Andy Weir
-         [ELÉRHETŐ]
+[SF-105] The Martian by Andy Weir - [AVAILABLE]
 
-Nyomj Entert a menübe való visszatéréshez...
+Press Enter to return to menu...
 ```
 
 ---
@@ -690,24 +696,24 @@ Nyomj Entert a menübe való visszatéréshez...
 
 ```
 ╔══════════════════════════════════════╗
-║   KÖNYV KÖLCSÖNZÉSE                  ║
+║   LOAN A BOOK                        ║
 ╚══════════════════════════════════════╝
 
-Írd be a Könyv Azonosítót: SF-042
-Írd be a Tagsági Azonosítót: 000123
+Enter Book ID: SF-042
+Enter Member ID: 000123
 
-✓ Könyv: Alapítvány - Isaac Asimov
-✓ Tag: Kovács János (Azonosító: 000123)
-✓ Jelenlegi kölcsönzések: 1/3
+✓ Book: Foundation by Isaac Asimov
+✓ Member: John Doe (ID: 000123)
+✓ Current loans: 1/3
 
-Kölcsönzés Dátuma: 2025-12-01
-Határidő: 2025-12-15 (14 nap)
+Loan Date: 2025-12-01
+Due Date: 2025-12-15 (14 days)
 
-Megerősíted a kölcsönzést? (I/N): I
+Confirm loan? (Y/N): Y
 
-✓ Könyv sikeresen kölcsönözve!
+✓ Book successfully loaned!
 
-Nyomj Entert a menübe való visszatéréshez...
+Press Enter to return to menu...
 ```
 
 ---
@@ -716,33 +722,33 @@ Nyomj Entert a menübe való visszatéréshez...
 
 ```
 ╔══════════════════════════════════════╗
-║   KÖNYV VISSZAHOZÁSA                 ║
+║   RETURN A BOOK                      ║
 ╚══════════════════════════════════════╝
 
-Írd be a Tagsági Azonosítót: 000123
+Enter Member ID: 000123
 
-Aktív kölcsönzések - Kovács János:
+Active loans for John Doe:
 
-[SF-005] Neurománc
-         Kölcsönözve: 2025-10-15 | Határidő: 2025-10-29
-         ⚠ KÉSEDELMES: 33 nap | Büntetés: 1 650 Ft
+[SF-005] Neuromancer
+         Loaned: 2025-10-15 | Due: 2025-10-29
+         ⚠ OVERDUE: 33 days | Fine: 1,650 HUF
 
-[DR-012] Rómeó és Júlia
-         Kölcsönözve: 2025-11-20 | Határidő: 2025-12-18
-         ✓ Időben (17 nap van még)
+[DR-012] Romeo and Juliet
+         Loaned: 2025-11-20 | Due: 2025-12-18
+         ✓ On time (17 days remaining)
 
-Írd be a visszahozandó könyv azonosítóját: SF-005
+Enter Book ID to return: SF-005
 
-⚠ BÜNTETÉSI ÉRTESÍTÉS
-A könyv 33 napja késedelmes.
-Teljes büntetés: 1 650 Ft (33 nap × 50 Ft/nap)
+⚠ FINE NOTICE
+Book is 33 days overdue.
+Total fine: 1,650 HUF (33 days × 50 HUF/day)
 
-Megerősíted a visszahozást? (I/N): I
+Confirm return? (y/n): y
 
-✓ Könyv sikeresen visszahozva.
-✓ Büntetés rögzítve: 1 650 Ft
+✓ Book returned successfully.
+✓ Fine recorded: 1,650 HUF
 
-Nyomj Entert a menübe való visszatéréshez...
+Press Enter to return to menu...
 ```
 
 ---
@@ -751,24 +757,24 @@ Nyomj Entert a menübe való visszatéréshez...
 
 ```
 ╔══════════════════════════════════════╗
-║   KÖNYVTÁRI STATISZTIKÁK             ║
+║   LIBRARY STATISTICS                 ║
 ╚══════════════════════════════════════╝
 
-📊 Legnépszerűbb Kategória:
-   Sci-fi (142 összes kölcsönzés)
+📊 Most Popular Category:
+   Sci-fi (142 total loans)
 
-⏰ Leggyakrabban Késő Tag:
-   Kovács János (Azonosító: 000123)
-   Késések száma: 8
+⏰ Most Frequently Late Member:
+   Kovács János (ID: 000123)
+   Late returns: 8
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-További információk:
-• Összes könyv a leltárban: 50
-• Jelenleg kölcsönzött könyvek: 23
-• Összes kintlévő büntetés: 4 350 Ft
+Additional information:
+• Total books in inventory: 50
+• Currently loaned books: 23
+• Total unpaid fines: 4 350 Ft
 
-Nyomj Entert a menübe való visszatéréshez...
+Press Enter to return to menu...
 ```
 
 ---
@@ -777,18 +783,18 @@ Nyomj Entert a menübe való visszatéréshez...
 
 ```
 ╔══════════════════════════════════════╗
-║   AKTÍV BÜNTETÉSEK                   ║
+║   UNPAID FINES                       ║
 ╚══════════════════════════════════════╝
 
-Tagsági Az. | Tag Neve      | Könyv Az. | Késés | Büntetés
-------------|---------------|-----------|-------|----------
-000123      | Kovács János  | SF-005    | 33 nap| 1 650 Ft
-000456      | Nagy Anna     | DR-012    | 12 nap|   600 Ft
-000089      | Szabó Péter   | TC-003    | 21 nap| 1 050 Ft
-000201      | Kiss Éva      | HS-008    | 5 nap |   250 Ft
-                                    ÖSSZESEN:  | 3 550 Ft
+Member ID   | Member Name   | Book ID   | Late    | Fine
+------------|---------------|-----------|---------|----------
+000123      | Kovács János  | SF-005    | 33 days | 1 650 Ft
+000456      | Nagy Anna     | DR-012    | 12 days |   600 Ft
+000089      | Szabó Péter   | TC-003    | 21 days | 1 050 Ft
+000201      | Kiss Éva      | HS-008    | 5 days  |   250 Ft
+                                        TOTAL:    | 3 550 Ft
 
-Nyomj Entert a menübe való visszatéréshez...
+Press Enter to return to menu...
 ```
 
 ---
@@ -968,7 +974,7 @@ src/
 - Használj beszédes változó- és metódusneveket
 - Adj hozzá JavaDoc kommenteket minden nyilvános metódushoz
 - Kövesd a Java elnevezési konvenciókat (camelCase változókhoz, PascalCase osztályokhoz)
-- Tartsd a metódusokat fókuszáltnak és tömörnek (Egyszeri Felelősség Elve)
+- Tartsd a metódusokat fókuszáltnak és tömörnek (Egyetlen Felelősség Elve)
 - Használj konstansokat a "mágikus számokhoz" (pl. `MAX_LOANS = 3`, `FINE_PER_DAY = 50`)
 - Kezelj kivételeket megfelelő szinteken
 - Naplózd a fontos műveleteket (kölcsönzés, visszahozás, tag létrehozása)
@@ -990,6 +996,6 @@ src/
 ---
 
 ## Dokumentum Verzió
-- **Verzió:** 2.0
-- **Dátum:** 2025-12-01
-- **Státusz:** Implementálásra Jóváhagyva
+- **Verzió:** 2.1
+- **Dátum:** 2025-12-02
+- **Státusz:** Tesztelésre vár

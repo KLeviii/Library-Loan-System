@@ -115,7 +115,7 @@ The system is a simple library management and loan system that enables book regi
 2. System displays member's active loans sorted by loan date (oldest first)
 3. Display format:
    ```
-   [ID] Title - Loaned: YYYY-MM-DD - Due: YYYY-MM-DD [OVERDUE: +X days, 50 HUF/day = X HUF]
+   [ID] Title - Loaned: YYYY-MM-DD - Due: YYYY-MM-DD [OVERDUE: +X days, 50 HUF/day = Y HUF]
    ```
    - **Overdue books:** Display in red with fine calculation
    - **On-time books:** Display in green
@@ -130,7 +130,7 @@ The system is a simple library management and loan system that enables book regi
 
 **Fine Calculation:**
 ```
-Fine = (Current Date - Due Date) × 50 HUF per day
+(current date - due date) × 50 HUF per day
 ```
 
 **Requirements:**
@@ -204,7 +204,7 @@ Member ID | Member Name | Book ID | Days Overdue | Fine Amount
 - Example valid titles: "1984", "Harry Potter és a bölcsek köve", "X-Men - Origins"
 
 **Author Name Validation:**
-- Allowed characters: Hungarian alphabet letters, spaces, hyphen (-)
+- Allowed characters: Hungarian alphabet letters, spaces, hyphen (-), apostrophe (')
 - Length: 2-100 characters
 - Must contain at least one letter
 - Example valid names: "Isaac Asimov", "Móra Ferenc", "Gárdonyi Géza"
@@ -426,6 +426,7 @@ TC-003;Clean Code;Robert C. Martin
 ```
 
 **Rules:**
+- Book ID numeric portion zero-padded to 3 digits
 - One book per line
 - Semicolon (;) as delimiter
 - No trailing semicolon
@@ -446,6 +447,8 @@ TC-003;Clean Code;Robert C. Martin
 **Rules:**
 - Member ID is zero-padded to 6 digits
 - One member per line
+- Semicolon (;) as delimiter
+- No trailing semicolon
 - UTF-8 encoding
 
 ---
@@ -462,7 +465,10 @@ HS-012;000042;2025-11-15
 
 **Rules:**
 - Date format: YYYY-MM-DD (ISO 8601)
+- Member ID is zero-padded to 6 digits
 - One loan per line
+- Semicolon (;) as delimiter
+- No trailing semicolon
 - Active loans only (returned books are removed)
 
 ---
@@ -480,7 +486,10 @@ HS-012;000042;2025-11-15
 - Amount in HUF (integer)
 - Overdue date is the date the book became overdue (due date + 1 day)
 - Fines remain until paid/cleared
+- Book ID numeric portion zero-padded to 3 digits
 - One fine per line per book
+- Semicolon (;) as delimiter
+- No trailing semicolon
 
 ---
 
@@ -570,7 +579,7 @@ HS-012;000042;2025-11-15
 ### 6.2 Exception Handling Strategy
 
 **User Interface Level:**
-1. Catch all exceptions at the UI boundary
+1. Catch all exceptions at the TUI boundary
 2. Display user-friendly error messages
 3. Offer recovery options:
    - "Press Enter to return to menu"
@@ -644,8 +653,8 @@ Select an option (1-7): _
 
 **Navigation:**
 - Number keys (1-7) to select menu options
-- Enter to confirm
-- ESC to return to previous menu (in submenus)
+- Enter or y/n prompt to confirm
+- ESC or Enter to return to previous menu (in submenus)
 - Arrow keys for selection in list views (optional enhancement)
 
 ---
@@ -672,14 +681,11 @@ Select category (1-6): 1
 ║   SCI-FI BOOKS                       ║
 ╚══════════════════════════════════════╝
 
-[SF-001] Dune by Frank Herbert
-         [AVAILABLE]
+[SF-001] Dune by Frank Herbert - [AVAILABLE]
 
-[SF-042] Foundation by Isaac Asimov
-         [LOANED until 2025-12-15]
+[SF-042] Foundation by Isaac Asimov - [LOANED until 2025-12-15]
 
-[SF-105] The Martian by Andy Weir
-         [AVAILABLE]
+[SF-105] The Martian by Andy Weir - [AVAILABLE]
 
 Press Enter to return to menu...
 ```
@@ -703,7 +709,7 @@ Enter Member ID: 000123
 Loan Date: 2025-12-01
 Due Date: 2025-12-15 (14 days)
 
-Confirm loan? (Y/N): Y
+Confirm loan? (y/n): y
 
 ✓ Book successfully loaned!
 
@@ -737,10 +743,56 @@ Enter Book ID to return: SF-005
 Book is 33 days overdue.
 Total fine: 1,650 HUF (33 days × 50 HUF/day)
 
-Confirm return? (Y/N): Y
+Confirm return? (y/n): y
 
 ✓ Book returned successfully.
 ✓ Fine recorded: 1,650 HUF
+
+Press Enter to return to menu...
+```
+
+---
+
+#### 7.3.4 Statistics
+
+```
+╔══════════════════════════════════════╗
+║   LIBRARY STATISTICS                 ║
+╚══════════════════════════════════════╝
+
+📊 Most Popular Category:
+   Sci-fi (142 total loans)
+
+⏰ Most Frequently Late Member:
+   Kovács János (ID: 000123)
+   Late returns: 8
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Additional information:
+• Total books in inventory: 50
+• Currently loaned books: 23
+• Total unpaid fines: 4 350 Ft
+
+Press Enter to return to menu...
+```
+
+---
+
+#### 7.3.5 List fines
+
+```
+╔══════════════════════════════════════╗
+║   UNPAID FINES                       ║
+╚══════════════════════════════════════╝
+
+Member ID   | Member Name   | Book ID   | Late    | Fine
+------------|---------------|-----------|---------|----------
+000123      | Kovács János  | SF-005    | 33 days | 1 650 Ft
+000456      | Nagy Anna     | DR-012    | 12 days |   600 Ft
+000089      | Szabó Péter   | TC-003    | 21 days | 1 050 Ft
+000201      | Kiss Éva      | HS-008    | 5 days  |   250 Ft
+                                        TOTAL:    | 3 550 Ft
 
 Press Enter to return to menu...
 ```
@@ -932,6 +984,6 @@ src/
 ---
 
 ## Document Version
-- **Version:** 2.0
-- **Date:** 2025-12-01
-- **Status:** Approved for Implementation
+- **Version:** 2.1
+- **Date:** 2025-12-02
+- **Status:** Awaiting testing
