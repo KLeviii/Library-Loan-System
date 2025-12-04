@@ -43,7 +43,7 @@ The system is a simple library management and loan system that enables book regi
 ### 2.3 Hardware Requirements
 - **RAM:** Minimum 2GB for IDE, 8GB recommended for system
 - **Storage:** 3.5GB free disk space (SSD recommended)
-- **main.ui.Display:** Minimum resolution 1024x768
+- **Display:** Minimum resolution 1024x768
 - **Processor:** 64-bit compatible
 
 ---
@@ -58,12 +58,12 @@ The system is a simple library management and loan system that enables book regi
 1. System displays list of available categories (Sci-fi, main.model.Drama, main.model.History, main.model.Children, main.model.Technical)
 2. User selects desired category
 3. System displays books sorted by the numeric portion of their ID (ascending order)
-4. main.ui.Display format for each book:
+4. Display format for each book:
    ```
    [ID] Title by Author - STATUS
    ```
-   - **Available books:** main.ui.Display in default color
-   - **Loaned books:** main.ui.Display in yellow with "[LOANED]" tag and expected return date
+   - **Available books:** Display in default color
+   - **Loaned books:** Display in yellow with "[LOANED]" tag and expected return date
    - Example: `[SF-042] Dune by Frank Herbert - [LOANED until 2025-12-15]`
 
 **Requirements:**
@@ -91,7 +91,7 @@ The system is a simple library management and loan system that enables book regi
 4. System checks if member has fewer than 3 active loans
 5. System records loan with current date
 6. System updates all relevant data files
-7. main.ui.Display confirmation with loan details and return due date
+7. Display confirmation with loan details and return due date
 
 **Business Rules:**
 - Maximum 3 concurrent loans per member
@@ -99,10 +99,10 @@ The system is a simple library management and loan system that enables book regi
 - main.model.Member ID must be valid (existing or newly created)
 
 **Error Cases:**
-- main.model.Book ID does not exist → main.ui.Display error, return to menu
-- main.model.Book already loaned → main.ui.Display expected return date, offer to reserve (if feature enabled)
-- main.model.Member has 3 active loans → main.ui.Display error message, list their current loans
-- Invalid name format → main.ui.Display error, re-prompt
+- main.model.Book ID does not exist → Display error, return to menu
+- main.model.Book already loaned → Display expected return date, offer to reserve (if feature enabled)
+- main.model.Member has 3 active loans → Display error message, list their current loans
+- Invalid name format → Display error, re-prompt
 
 ---
 
@@ -113,12 +113,12 @@ The system is a simple library management and loan system that enables book regi
 **Process Flow:**
 1. User enters member ID
 2. System displays member's active loans sorted by loan date (oldest first)
-3. main.ui.Display format:
+3. Display format:
    ```
    [ID] Title - Loaned: YYYY-MM-DD - Due: YYYY-MM-DD [OVERDUE: +X days, 50 HUF/day = Y HUF]
    ```
-   - **Overdue books:** main.ui.Display in red with fine calculation
-   - **On-time books:** main.ui.Display in green
+   - **Overdue books:** Display in red with fine calculation
+   - **On-time books:** Display in green
 4. User selects book to return (by entering book ID)
 5. If overdue:
    - System calculates total fine (days overdue × 50 HUF)
@@ -126,7 +126,7 @@ The system is a simple library management and loan system that enables book regi
    - Records fine in fines.txt
 6. System updates loan status
 7. System updates all relevant data files
-8. main.ui.Display confirmation
+8. Display confirmation
 
 **Fine Calculation:**
 ```
@@ -149,15 +149,15 @@ The system is a simple library management and loan system that enables book regi
 2. **By Title:** Partial match, case-insensitive
 3. **By Author:** Partial match, case-insensitive
 
-**main.ui.Display:** Show search results with same format as book listing, including availability status.
+**Display:** Show search results with same format as book listing, including availability status.
 
 ---
 
 ### 3.5 List All Fines
 
-**Description:** main.ui.Display all active fines across all members.
+**Description:** Display all active fines across all members.
 
-**main.ui.Display Format:**
+**Display Format:**
 ```
 main.model.Member ID | main.model.Member Name | main.model.Book ID | Days Overdue | Fine Amount
 ----------|-------------|---------|--------------|------------
@@ -175,21 +175,21 @@ main.model.Member ID | main.model.Member Name | main.model.Book ID | Days Overdu
 
 ### 3.6 Statistics
 
-**Description:** main.ui.Display library usage statistics.
+**Description:** Display library usage statistics.
 
-**Statistics to main.ui.Display:**
+**Statistics to Display:**
 
 1. **Most Popular Category**
    - Metric: Total number of loans (all-time) per category
-   - main.ui.Display: Category name and loan count
+   - Display: Category name and loan count
    - Example: "Most Popular Category: Sci-fi (142 loans)"
 
 2. **Most Frequently Late main.model.Member**
    - Metric: Total number of overdue returns per member
-   - main.ui.Display: main.model.Member ID, name, and count of late returns
+   - Display: main.model.Member ID, name, and count of late returns
    - Example: "Most Frequently Late: John Doe (ID: 000123) - 8 late returns"
 
-**Additional Statistics (Optional main.ui.Display):**
+**Additional Statistics (Optional Display):**
 - Total books in inventory
 - Total active loans
 - Average loan duration per category
@@ -525,7 +525,7 @@ HS-012;000042;2025-11-15
 **Error Handling:**
 - If file write fails, roll back in-memory changes
 - Log error details for debugging
-- main.ui.Display user-friendly error message
+- Display user-friendly error message
 
 ---
 
@@ -594,7 +594,7 @@ HS-012;000042;2025-11-15
 
 **User Interface Level:**
 1. Catch all exceptions at the TUI boundary
-2. main.ui.Display user-friendly error messages
+2. Display user-friendly error messages
 3. Offer recovery options:
    - "Press Enter to return to menu"
    - "Press R to retry"

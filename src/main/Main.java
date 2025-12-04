@@ -1,7 +1,7 @@
 package main;
 
 import main.exception.InvalidNumberInputExceptionAtUserInterface;
-import main.ui.Display;
+import main.ui.MenuUI;
 
 import java.util.Scanner;
 
@@ -15,7 +15,7 @@ public class Main {
         String BLUE = "\u001B[34m";
         String GREEN = "\u001B[32m";
 
-        Display display = new Display();
+        MenuUI display = new MenuUI();
         display.println("╔══════════════════════════════╗");
         display.println("║"+YELLOW+"LIBRARY LOAN SYSTEM"+RESET+"           ║");
         display.println("╚══════════════════════════════╝");
