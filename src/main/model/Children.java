@@ -1,3 +1,5 @@
+package main.model;
+
 public final class Children extends Book {
     private static final int loanDuration = 14;
     private static int count = 0;

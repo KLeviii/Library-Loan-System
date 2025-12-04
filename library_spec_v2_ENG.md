@@ -1,4 +1,4 @@
-# Library Loan System - Technical Specification
+# Library main.model.Loan System - main.model.Technical Specification
 
 ## Table of Contents
 1. [System Overview](#system-overview)
@@ -19,9 +19,9 @@
 The system is a simple library management and loan system that enables book registration, listing, and deletion for library members (who are also tracked by the system). The system manages loans, returns, and fine tracking, while providing statistics on popular categories and frequently late members.
 
 ### 1.2 Core Features
-- Book inventory management across 5 categories
-- Member registration and management
-- Loan and return processing
+- main.model.Book inventory management across 5 categories
+- main.model.Member registration and management
+- main.model.Loan and return processing
 - Automatic fine calculation for overdue books
 - Statistics and reporting
 - Terminal User Interface (TUI) with ANSI color codes
@@ -43,7 +43,7 @@ The system is a simple library management and loan system that enables book regi
 ### 2.3 Hardware Requirements
 - **RAM:** Minimum 2GB for IDE, 8GB recommended for system
 - **Storage:** 3.5GB free disk space (SSD recommended)
-- **Display:** Minimum resolution 1024x768
+- **main.ui.Display:** Minimum resolution 1024x768
 - **Processor:** 64-bit compatible
 
 ---
@@ -55,15 +55,15 @@ The system is a simple library management and loan system that enables book regi
 **Description:** Users can view the current inventory of books filtered by category.
 
 **Behavior:**
-1. System displays list of available categories (Sci-fi, Drama, History, Children, Technical)
+1. System displays list of available categories (Sci-fi, main.model.Drama, main.model.History, main.model.Children, main.model.Technical)
 2. User selects desired category
 3. System displays books sorted by the numeric portion of their ID (ascending order)
-4. Display format for each book:
+4. main.ui.Display format for each book:
    ```
    [ID] Title by Author - STATUS
    ```
-   - **Available books:** Display in default color
-   - **Loaned books:** Display in yellow with "[LOANED]" tag and expected return date
+   - **Available books:** main.ui.Display in default color
+   - **Loaned books:** main.ui.Display in yellow with "[LOANED]" tag and expected return date
    - Example: `[SF-042] Dune by Frank Herbert - [LOANED until 2025-12-15]`
 
 **Requirements:**
@@ -72,7 +72,7 @@ The system is a simple library management and loan system that enables book regi
 
 ---
 
-### 3.2 Loan a Book
+### 3.2 main.model.Loan a main.model.Book
 
 **Description:** Users can loan a book by providing its ID and member identification.
 
@@ -91,34 +91,34 @@ The system is a simple library management and loan system that enables book regi
 4. System checks if member has fewer than 3 active loans
 5. System records loan with current date
 6. System updates all relevant data files
-7. Display confirmation with loan details and return due date
+7. main.ui.Display confirmation with loan details and return due date
 
 **Business Rules:**
 - Maximum 3 concurrent loans per member
-- Book must be available (not currently loaned)
-- Member ID must be valid (existing or newly created)
+- main.model.Book must be available (not currently loaned)
+- main.model.Member ID must be valid (existing or newly created)
 
 **Error Cases:**
-- Book ID does not exist → Display error, return to menu
-- Book already loaned → Display expected return date, offer to reserve (if feature enabled)
-- Member has 3 active loans → Display error message, list their current loans
-- Invalid name format → Display error, re-prompt
+- main.model.Book ID does not exist → main.ui.Display error, return to menu
+- main.model.Book already loaned → main.ui.Display expected return date, offer to reserve (if feature enabled)
+- main.model.Member has 3 active loans → main.ui.Display error message, list their current loans
+- Invalid name format → main.ui.Display error, re-prompt
 
 ---
 
-### 3.3 Return a Book
+### 3.3 Return a main.model.Book
 
 **Description:** Users can return loaned books and view associated fines if applicable.
 
 **Process Flow:**
 1. User enters member ID
 2. System displays member's active loans sorted by loan date (oldest first)
-3. Display format:
+3. main.ui.Display format:
    ```
    [ID] Title - Loaned: YYYY-MM-DD - Due: YYYY-MM-DD [OVERDUE: +X days, 50 HUF/day = Y HUF]
    ```
-   - **Overdue books:** Display in red with fine calculation
-   - **On-time books:** Display in green
+   - **Overdue books:** main.ui.Display in red with fine calculation
+   - **On-time books:** main.ui.Display in green
 4. User selects book to return (by entering book ID)
 5. If overdue:
    - System calculates total fine (days overdue × 50 HUF)
@@ -126,7 +126,7 @@ The system is a simple library management and loan system that enables book regi
    - Records fine in fines.txt
 6. System updates loan status
 7. System updates all relevant data files
-8. Display confirmation
+8. main.ui.Display confirmation
 
 **Fine Calculation:**
 ```
@@ -145,21 +145,21 @@ The system is a simple library management and loan system that enables book regi
 **Description:** Users can search for books using multiple criteria.
 
 **Search Options:**
-1. **By Book ID:** Exact match (e.g., "SF-042")
+1. **By main.model.Book ID:** Exact match (e.g., "SF-042")
 2. **By Title:** Partial match, case-insensitive
 3. **By Author:** Partial match, case-insensitive
 
-**Display:** Show search results with same format as book listing, including availability status.
+**main.ui.Display:** Show search results with same format as book listing, including availability status.
 
 ---
 
 ### 3.5 List All Fines
 
-**Description:** Display all active fines across all members.
+**Description:** main.ui.Display all active fines across all members.
 
-**Display Format:**
+**main.ui.Display Format:**
 ```
-Member ID | Member Name | Book ID | Days Overdue | Fine Amount
+main.model.Member ID | main.model.Member Name | main.model.Book ID | Days Overdue | Fine Amount
 ----------|-------------|---------|--------------|------------
 000123    | John Doe    | SF-005  | 5            | 250 HUF
 000456    | Jane Smith  | DR-012  | 12           | 600 HUF
@@ -175,21 +175,21 @@ Member ID | Member Name | Book ID | Days Overdue | Fine Amount
 
 ### 3.6 Statistics
 
-**Description:** Display library usage statistics.
+**Description:** main.ui.Display library usage statistics.
 
-**Statistics to Display:**
+**Statistics to main.ui.Display:**
 
 1. **Most Popular Category**
    - Metric: Total number of loans (all-time) per category
-   - Display: Category name and loan count
+   - main.ui.Display: Category name and loan count
    - Example: "Most Popular Category: Sci-fi (142 loans)"
 
-2. **Most Frequently Late Member**
+2. **Most Frequently Late main.model.Member**
    - Metric: Total number of overdue returns per member
-   - Display: Member ID, name, and count of late returns
+   - main.ui.Display: main.model.Member ID, name, and count of late returns
    - Example: "Most Frequently Late: John Doe (ID: 000123) - 8 late returns"
 
-**Additional Statistics (Optional Display):**
+**Additional Statistics (Optional main.ui.Display):**
 - Total books in inventory
 - Total active loans
 - Average loan duration per category
@@ -198,7 +198,7 @@ Member ID | Member Name | Book ID | Days Overdue | Fine Amount
 
 ### 3.7 Input Validation
 
-**Book Title Validation:**
+**main.model.Book Title Validation:**
 - Allowed characters: Hungarian alphabet letters (A-Z, Á, É, Í, Ó, Ö, Ő, Ú, Ü, Ű), spaces, digits, hyphen (-), comma (,), period (.)
 - Length: 1-200 characters
 - Example valid titles: "1984", "Harry Potter és a bölcsek köve", "X-Men - Origins"
@@ -209,17 +209,17 @@ Member ID | Member Name | Book ID | Days Overdue | Fine Amount
 - Must contain at least one letter
 - Example valid names: "Isaac Asimov", "Móra Ferenc", "Gárdonyi Géza"
 
-**Member Name Validation:**
+**main.model.Member Name Validation:**
 - Same rules as Author Name
 - Minimum 2 characters, maximum 100 characters
 
-**Book ID Format:**
+**main.model.Book ID Format:**
 - Pattern: `[CATEGORY_CODE]-[NUMBER]`
 - Category codes: SF, DR, HS, CH, TC
 - Number: 001-999 (zero-padded to 3 digits)
 - Example: "SF-042", "DR-001"
 
-**Member ID Format:**
+**main.model.Member ID Format:**
 - Range: 1-999999
 - Generated sequentially by the system
 - Format: Zero-padded to 6 digits (e.g., "000001", "012345")
@@ -228,31 +228,31 @@ Member ID | Member Name | Book ID | Days Overdue | Fine Amount
 
 ## 4. Data Model
 
-### 4.1 Book Categories
+### 4.1 main.model.Book Categories
 
-| Category | Max Loan Duration | ID Prefix | Description |
+| Category | Max main.model.Loan Duration | ID Prefix | Description |
 |----------|-------------------|-----------|-------------|
 | **Sci-fi** | 14 days | SF | Science fiction books |
-| **Drama** | 28 days | DR | Drama and theatrical works |
-| **History** | 21 days | HS | Historical books and biographies |
-| **Children** | 14 days | CH | Children's literature |
-| **Technical** | 7 days | TC | Technical and educational books |
+| **main.model.Drama** | 28 days | DR | main.model.Drama and theatrical works |
+| **main.model.History** | 21 days | HS | Historical books and biographies |
+| **main.model.Children** | 14 days | CH | main.model.Children's literature |
+| **main.model.Technical** | 7 days | TC | main.model.Technical and educational books |
 
 ---
 
 ### 4.2 Class Structure
 
-#### 4.2.1 Abstract Book Class
+#### 4.2.1 Abstract main.model.Book Class
 
 ```java
-public abstract class Book {
+public abstract class main.model.Book {
     private final String id;           // Unique identifier (e.g., "SF-042")
-    private final String title;        // Book title
+    private final String title;        // main.model.Book title
     private final String author;       // Author name
-    private String loanedTo;           // Member ID (null if available)
+    private String loanedTo;           // main.model.Member ID (null if available)
     
     // Constructor
-    public Book(String id, String title, String author) { ... }
+    public main.model.Book(String id, String title, String author) { ... }
     
     // Getters only for immutable fields
     public String getId() { ... }
@@ -269,49 +269,63 @@ public abstract class Book {
 }
 ```
 
-#### 4.2.2 Book Subclasses
+#### 4.2.2 main.model.Book Subclasses
 
-Each category has its own class inheriting from Book:
+Each category has its own class inheriting from main.model.Book:
 
-**SciFi.java**
+**main.model.SciFi.java**
+
 ```java
+import main.model.Book;
+
 public class SciFi extends Book {
-    private static final int LOAN_DURATION = 14;  // days
-    private static int count = 0;                  // Instance counter
-    
-    public SciFi(String id, String title, String author) {
-        super(id, title, author);
-        count++;
-    }
-    
-    @Override
-    public int getLoanDuration() { return LOAN_DURATION; }
-    
-    @Override
-    public String getCategory() { return "Sci-fi"; }
-    
-    public static int getCount() { return count; }
+   private static final int LOAN_DURATION = 14;  // days
+   private static int count = 0;                  // Instance counter
+
+   public main.model.SciFi(
+   String id, String
+   title,
+   String author)
+
+   {
+      super(id, title, author);
+      count++;
+   }
+
+   @Override
+   public int getLoanDuration() {
+      return LOAN_DURATION;
+   }
+
+   @Override
+   public String getCategory() {
+      return "Sci-fi";
+   }
+
+   public static int getCount() {
+      return count;
+   }
 }
 ```
 
 **Similar structure for:**
-- `Drama.java` (LOAN_DURATION = 28)
-- `History.java` (LOAN_DURATION = 21)
-- `Children.java` (LOAN_DURATION = 14)
-- `Technical.java` (LOAN_DURATION = 7)
+- `main.model.Drama.java` (LOAN_DURATION = 28)
+- `main.model.History.java` (LOAN_DURATION = 21)
+- `main.model.Children.java` (LOAN_DURATION = 14)
+- `main.model.Technical.java` (LOAN_DURATION = 7)
 
 ---
 
-#### 4.2.3 Member Class
+#### 4.2.3 main.model.Member Class
 
 ```java
-public class Member {
+public class main.model.Member {
     private final String memberId;     // Unique ID (000001-999999)
-    private final String name;         // Member name
+    private final String name;         // main.model.Member name
     private int loanedBooks;           // Count of active loans (max 3)
     
     // Constructor
-    public Member(String memberId, String name) { ... }
+    public main.model.Member(String memberId, String name) { ... }
     
     // Getters
     public String getMemberId() { ... }
@@ -330,16 +344,16 @@ public class Member {
 
 ---
 
-#### 4.2.4 Loan Class
+#### 4.2.4 main.model.Loan Class
 
 ```java
-public class Loan {
+public class main.model.Loan {
     private final String bookId;
     private final String memberId;
     private final LocalDate loanDate;
     private final LocalDate dueDate;
     
-    public Loan(String bookId, String memberId, LocalDate loanDate, int loanDuration) {
+    public main.model.Loan(String bookId, String memberId, LocalDate loanDate, int loanDuration) {
         this.bookId = bookId;
         this.memberId = memberId;
         this.loanDate = loanDate;
@@ -426,7 +440,7 @@ TC-003;Clean Code;Robert C. Martin
 ```
 
 **Rules:**
-- Book ID numeric portion zero-padded to 3 digits
+- main.model.Book ID numeric portion zero-padded to 3 digits
 - One book per line
 - Semicolon (;) as delimiter
 - No trailing semicolon
@@ -445,7 +459,7 @@ TC-003;Clean Code;Robert C. Martin
 ```
 
 **Rules:**
-- Member ID is zero-padded to 6 digits
+- main.model.Member ID is zero-padded to 6 digits
 - One member per line
 - Semicolon (;) as delimiter
 - No trailing semicolon
@@ -465,7 +479,7 @@ HS-012;000042;2025-11-15
 
 **Rules:**
 - Date format: YYYY-MM-DD (ISO 8601)
-- Member ID is zero-padded to 6 digits
+- main.model.Member ID is zero-padded to 6 digits
 - One loan per line
 - Semicolon (;) as delimiter
 - No trailing semicolon
@@ -486,7 +500,7 @@ HS-012;000042;2025-11-15
 - Amount in HUF (integer)
 - Overdue date is the date the book became overdue (due date + 1 day)
 - Fines remain until paid/cleared
-- Book ID numeric portion zero-padded to 3 digits
+- main.model.Book ID numeric portion zero-padded to 3 digits
 - One fine per line per book
 - Semicolon (;) as delimiter
 - No trailing semicolon
@@ -503,7 +517,7 @@ HS-012;000042;2025-11-15
 
 | Action | Files Updated |
 |--------|---------------|
-| Loan a book | `loanedBooks.txt` (add entry), `members.txt` (update loan count if new member) |
+| main.model.Loan a book | `loanedBooks.txt` (add entry), `members.txt` (update loan count if new member) |
 | Return a book | `loanedBooks.txt` (remove entry), `fines.txt` (add if overdue) |
 | Create member | `members.txt` (add entry) |
 | Clear fine | `fines.txt` (remove entry) |
@@ -511,7 +525,7 @@ HS-012;000042;2025-11-15
 **Error Handling:**
 - If file write fails, roll back in-memory changes
 - Log error details for debugging
-- Display user-friendly error message
+- main.ui.Display user-friendly error message
 
 ---
 
@@ -519,30 +533,30 @@ HS-012;000042;2025-11-15
 
 ### 6.1 Custom Exception Classes
 
-#### 6.1.1 InvalidBookIdException
+#### 6.1.1 main.exception.InvalidBookIdException
 **When thrown:** 
-- Book ID format is incorrect (not matching [CATEGORY]-[NUMBER])
-- Book ID does not exist in the system
+- main.model.Book ID format is incorrect (not matching [CATEGORY]-[NUMBER])
+- main.model.Book ID does not exist in the system
 
 **Example message:**
 ```
 "Invalid book ID: 'XY-123'. Expected format: [SF|DR|HS|CH|TC]-[001-999]"
-"Book ID 'SF-999' does not exist in the library."
+"main.model.Book ID 'SF-999' does not exist in the library."
 ```
 
 ---
 
-#### 6.1.2 InvalidMemberException
+#### 6.1.2 main.exception.InvalidMemberException
 **When thrown:**
-- Member ID format is incorrect
-- Member ID does not exist in the system
-- Member has reached maximum loan limit (3 books)
+- main.model.Member ID format is incorrect
+- main.model.Member ID does not exist in the system
+- main.model.Member has reached maximum loan limit (3 books)
 
 **Example message:**
 ```
 "Invalid member ID: 'ABC123'. Expected numeric ID: 000001-999999"
-"Member ID '000999' not found."
-"Member '000042' has reached the maximum loan limit (3 books)."
+"main.model.Member ID '000999' not found."
+"main.model.Member '000042' has reached the maximum loan limit (3 books)."
 ```
 
 ---
@@ -580,26 +594,38 @@ HS-012;000042;2025-11-15
 
 **User Interface Level:**
 1. Catch all exceptions at the TUI boundary
-2. Display user-friendly error messages
+2. main.ui.Display user-friendly error messages
 3. Offer recovery options:
    - "Press Enter to return to menu"
    - "Press R to retry"
 4. Never crash the application
 
 **Example:**
+
 ```java
-try {
-    loanBook(bookId, memberId);
-} catch (InvalidBookIdException e) {
-    displayError(e.getMessage());
-    promptReturnToMenu();
-} catch (InvalidMemberException e) {
-    displayError(e.getMessage());
-    offerMemberCreation();
-} catch (FileOperationException e) {
-    displayError("System error: " + e.getMessage());
-    logError(e);
-    promptReturnToMenu();
+import main.exception.InvalidBookIdException;
+import main.exception.InvalidMemberException;try{
+loanBook(bookId, memberId);
+}catch(
+InvalidBookIdException e){
+
+displayError(e.getMessage());
+
+promptReturnToMenu();
+}catch(
+InvalidMemberException e){
+
+displayError(e.getMessage());
+
+offerMemberCreation();
+}catch(
+FileOperationException e){
+
+displayError("System error: "+e.getMessage());
+
+logError(e);
+
+promptReturnToMenu();
 }
 ```
 
@@ -641,8 +667,8 @@ try {
 ╚══════════════════════════════════════╝
 
 1. List Books by Category
-2. Loan a Book
-3. Return a Book
+2. main.model.Loan a main.model.Book
+3. Return a main.model.Book
 4. Search Books
 5. List All Fines
 6. View Statistics
@@ -669,11 +695,11 @@ Select an option (1-7): _
 ╚══════════════════════════════════════╝
 
 1. Sci-fi (14 books)
-2. Drama (8 books)
-3. History (12 books)
-4. Children (10 books)
-5. Technical (6 books)
-6. Back to Main Menu
+2. main.model.Drama (8 books)
+3. main.model.History (12 books)
+4. main.model.Children (10 books)
+5. main.model.Technical (6 books)
+6. Back to main.Main Menu
 
 Select category (1-6): 1
 
@@ -692,40 +718,40 @@ Press Enter to return to menu...
 
 ---
 
-#### 7.3.2 Loan a Book
+#### 7.3.2 main.model.Loan a main.model.Book
 
 ```
 ╔══════════════════════════════════════╗
 ║   LOAN A BOOK                        ║
 ╚══════════════════════════════════════╝
 
-Enter Book ID: SF-042
-Enter Member ID: 000123
+Enter main.model.Book ID: SF-042
+Enter main.model.Member ID: 000123
 
-✓ Book: Foundation by Isaac Asimov
-✓ Member: John Doe (ID: 000123)
+✓ main.model.Book: Foundation by Isaac Asimov
+✓ main.model.Member: John Doe (ID: 000123)
 ✓ Current loans: 1/3
 
-Loan Date: 2025-12-01
+main.model.Loan Date: 2025-12-01
 Due Date: 2025-12-15 (14 days)
 
 Confirm loan? (y/n): y
 
-✓ Book successfully loaned!
+✓ main.model.Book successfully loaned!
 
 Press Enter to return to menu...
 ```
 
 ---
 
-#### 7.3.3 Return a Book (with Fine)
+#### 7.3.3 Return a main.model.Book (with Fine)
 
 ```
 ╔══════════════════════════════════════╗
 ║   RETURN A BOOK                      ║
 ╚══════════════════════════════════════╝
 
-Enter Member ID: 000123
+Enter main.model.Member ID: 000123
 
 Active loans for John Doe:
 
@@ -737,15 +763,15 @@ Active loans for John Doe:
          Loaned: 2025-11-20 | Due: 2025-12-18
          ✓ On time (17 days remaining)
 
-Enter Book ID to return: SF-005
+Enter main.model.Book ID to return: SF-005
 
 ⚠ FINE NOTICE
-Book is 33 days overdue.
+main.model.Book is 33 days overdue.
 Total fine: 1,650 HUF (33 days × 50 HUF/day)
 
 Confirm return? (y/n): y
 
-✓ Book returned successfully.
+✓ main.model.Book returned successfully.
 ✓ Fine recorded: 1,650 HUF
 
 Press Enter to return to menu...
@@ -763,7 +789,7 @@ Press Enter to return to menu...
 📊 Most Popular Category:
    Sci-fi (142 total loans)
 
-⏰ Most Frequently Late Member:
+⏰ Most Frequently Late main.model.Member:
    Kovács János (ID: 000123)
    Late returns: 8
 
@@ -786,7 +812,7 @@ Press Enter to return to menu...
 ║   UNPAID FINES                       ║
 ╚══════════════════════════════════════╝
 
-Member ID   | Member Name   | Book ID   | Late    | Fine
+main.model.Member ID   | main.model.Member Name   | main.model.Book ID   | Late    | Fine
 ------------|---------------|-----------|---------|----------
 000123      | Kovács János  | SF-005    | 33 days | 1 650 Ft
 000456      | Nagy Anna     | DR-012    | 12 days |   600 Ft
@@ -816,24 +842,24 @@ Press Enter to return to menu...
 ### 9.1 Unit Testing
 
 **Classes to Test:**
-- `Book` and all subclasses (SciFi, Drama, etc.)
-- `Member`
-- `Loan` (especially fine calculation)
+- `main.model.Book` and all subclasses (main.model.SciFi, main.model.Drama, etc.)
+- `main.model.Member`
+- `main.model.Loan` (especially fine calculation)
 - `Fine`
 - Input validation methods
 
 **Test Cases (Minimum):**
 
-**Book Class:**
+**main.model.Book Class:**
 - Verify immutable fields cannot be changed
 - Verify loan duration for each category
 - Verify instance counters increment correctly
 
-**Member Class:**
+**main.model.Member Class:**
 - Verify loan limit enforcement (max 3)
 - Verify loan count increment/decrement
 
-**Loan Class:**
+**main.model.Loan Class:**
 - Calculate correct due date for each category
 - Calculate correct fine amount for various overdue periods
 - Handle non-overdue cases (fine = 0)
@@ -853,7 +879,7 @@ Press Enter to return to menu...
 - Handle corrupted data (skip invalid lines, log errors)
 - Successfully save changes after each operation
 
-**Loan Workflow:**
+**main.model.Loan Workflow:**
 - Complete loan process (select book → verify member → record loan)
 - Prevent loan when member has 3 active loans
 - Prevent loan of already-loaned book
@@ -901,12 +927,12 @@ DR-001;000001;2025-11-15
 
 ### 9.4 Edge Cases to Test
 
-1. **Member with exactly 3 loans tries to loan a 4th**
+1. **main.model.Member with exactly 3 loans tries to loan a 4th**
 2. **Return a book on the exact due date (should have 0 fine)**
 3. **Return a book 1 day overdue (should have 50 HUF fine)**
 4. **New member creation with duplicate name (should be allowed, different IDs)**
-5. **Book ID with leading zeros (SF-001 vs SF-1)**
-6. **Member name with Hungarian characters (Á, É, Í, etc.)**
+5. **main.model.Book ID with leading zeros (SF-001 vs SF-1)**
+6. **main.model.Member name with Hungarian characters (Á, É, Í, etc.)**
 7. **Very long title (200 characters at the limit)**
 8. **File contains UTF-8 BOM (should handle gracefully)**
 9. **Date calculations across month/year boundaries**
@@ -926,29 +952,29 @@ DR-001;000001;2025-11-15
 ```
 src/
 ├── main/
-│   ├── Main.java                  // Entry point
+│   ├── main.Main.java                  // Entry point
 │   ├── model/
-│   │   ├── Book.java              // Abstract class
-│   │   ├── SciFi.java
-│   │   ├── Drama.java
-│   │   ├── History.java
-│   │   ├── Children.java
-│   │   ├── Technical.java
-│   │   ├── Member.java
-│   │   ├── Loan.java
+│   │   ├── main.model.Book.java              // Abstract class
+│   │   ├── main.model.SciFi.java
+│   │   ├── main.model.Drama.java
+│   │   ├── main.model.History.java
+│   │   ├── main.model.Children.java
+│   │   ├── main.model.Technical.java
+│   │   ├── main.model.Member.java
+│   │   ├── main.model.Loan.java
 │   │   └── Fine.java
 │   ├── service/
-│   │   ├── BookService.java       // Book operations
-│   │   ├── MemberService.java     // Member operations
-│   │   ├── LoanService.java       // Loan operations
+│   │   ├── BookService.java       // main.model.Book operations
+│   │   ├── MemberService.java     // main.model.Member operations
+│   │   ├── LoanService.java       // main.model.Loan operations
 │   │   └── FileService.java       // File I/O operations
 │   ├── ui/
-│   │   ├── MenuUI.java            // Main menu
+│   │   ├── MenuUI.java            // main.Main menu
 │   │   ├── ConsoleUI.java         // Console utilities
 │   │   └── AnsiColors.java        // ANSI color codes
 │   ├── exception/
-│   │   ├── InvalidBookIdException.java
-│   │   ├── InvalidMemberException.java
+│   │   ├── main.exception.InvalidBookIdException.java
+│   │   ├── main.exception.InvalidMemberException.java
 │   │   ├── InvalidInputException.java
 │   │   └── FileOperationException.java
 │   └── util/
@@ -973,11 +999,11 @@ src/
 
 | Term | Definition |
 |------|------------|
-| **Loan Duration** | Maximum number of days a book can be borrowed before becoming overdue |
+| **main.model.Loan Duration** | Maximum number of days a book can be borrowed before becoming overdue |
 | **Fine** | Penalty amount charged for overdue books (50 HUF per day) |
-| **Active Loan** | A book currently loaned out and not yet returned |
+| **Active main.model.Loan** | A book currently loaned out and not yet returned |
 | **Overdue** | A book not returned by its due date |
-| **Member** | Registered library user with unique ID |
+| **main.model.Member** | Registered library user with unique ID |
 | **TUI** | Text-based User Interface (terminal/console interface) |
 | **ANSI Codes** | Escape sequences for terminal text formatting and colors |
 

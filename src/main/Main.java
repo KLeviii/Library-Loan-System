@@ -1,3 +1,8 @@
+package main;
+
+import main.exception.InvalidNumberInputExceptionAtUserInterface;
+import main.ui.Display;
+
 import java.util.Scanner;
 
 public class Main {
@@ -22,7 +27,7 @@ public class Main {
                 display.println("┋");
                 display.println("╔══════════════════════════════╗");
                 display.println("║"+YELLOW+"OPTIONS:"+RESET+"                      ║");
-                display.println("║"+GREEN+ "1. Loan a book"+RESET+"                ║");
+                display.println("║"+GREEN+ "1. main.model.Loan a book"+RESET+"                ║");
                 display.println("║"+BLUE+ "2. Give back a book"+RESET+"           ║");
                 display.println("║"+CYAN+ "3. Statistics"+RESET+"                 ║");
                 display.println("║"+RED+ "0. Exit"+RESET+"                       ║");

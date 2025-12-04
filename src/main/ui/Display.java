@@ -1,3 +1,5 @@
+package main.ui;
+
 public class Display {
 
     public void println(String value) {
