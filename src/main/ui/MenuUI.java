@@ -1,4 +1,6 @@
-public class Display {
+package main.ui;
+
+public class MenuUI {
 
     public void println(String value) {
         System.out.println(value);

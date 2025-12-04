@@ -1,13 +1,15 @@
-public final class Technical extends Book{
-    private static final int loanDuration = 7;
+package main.model;
+
+public final class Drama extends Book{
+    private static final int loanDuration = 28;
     private static int count = 0;
 
-    public Technical(String id, String title, String author, int loanedTo) {
+    public Drama(String id, String title, String author, int loanedTo) {
         super(id, title, author, loanedTo);
         count++;
     }
 
-    public Technical(String id, String title, String author) {
+    public Drama(String id, String title, String author) {
         super(id, title, author);
         count++;
     }

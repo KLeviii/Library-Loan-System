@@ -1,3 +1,7 @@
+package main.model;
+
+import main.exception.LoanLimitReachedException;
+
 public class Member {
     private String name;
     private int id;

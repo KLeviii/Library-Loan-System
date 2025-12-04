@@ -1,4 +1,9 @@
-import javax.swing.plaf.IconUIResource;
+package main.model;
+
+import main.exception.InvalidBookIdException;
+import main.exception.InvalidMemberException;
+import main.exception.InvalidReadingException;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -67,7 +72,7 @@ public abstract class Book {
         }
     }
 
-    public void checkMember(int memberId) throws InvalidReadingException, InvalidMemberException{
+    public void checkMember(int memberId) throws InvalidReadingException, InvalidMemberException {
         boolean foundMember = false;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("members.txt"))) {
             String line;

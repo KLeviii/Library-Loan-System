@@ -159,7 +159,7 @@ A rendszer egy egyszerű könyvtári nyilvántartó és kölcsönző rendszer, a
 
 **Megjelenítési Formátum:**
 ```
-Member ID | Member Name | Book ID | Days Overdue | Fine Amount
+main.model.Member ID | main.model.Member Name | main.model.Book ID | Days Overdue | Fine Amount
 ----------|-------------|---------|--------------|------------
 000123    | John Doe    | SF-005  | 5            | 250 HUF
 000456    | Jane Smith  | DR-012  | 12           | 600 HUF
@@ -242,17 +242,17 @@ Member ID | Member Name | Book ID | Days Overdue | Fine Amount
 
 ### 4.2 Osztály Struktúra
 
-#### 4.2.1 Absztrakt Book Osztály
+#### 4.2.1 Absztrakt main.model.Book Osztály
 
 ```java
-public abstract class Book {
+public abstract class main.model.Book {
     private final String id;           // Egyedi azonosító (pl. "SF-042")
     private final String title;        // Könyv címe
     private final String author;       // Szerző neve
     private String loanedTo;           // Tagsági azonosító (null ha elérhető)
     
     // Konstruktor
-    public Book(String id, String title, String author) { ... }
+    public main.model.Book(String id, String title, String author) { ... }
     
     // Csak getterek a megváltoztathatatlan mezőkhöz
     public String getId() { ... }
@@ -269,49 +269,63 @@ public abstract class Book {
 }
 ```
 
-#### 4.2.2 Book Alosztályok
+#### 4.2.2 main.model.Book Alosztályok
 
-Minden kategóriának saját osztálya van, amely a Book osztályt örökli:
+Minden kategóriának saját osztálya van, amely a main.model.Book osztályt örökli:
 
-**SciFi.java**
+**main.model.SciFi.java**
+
 ```java
+import main.model.Book;
+
 public class SciFi extends Book {
-    private static final int LOAN_DURATION = 14;  // napok
-    private static int count = 0;                  // Példányszámláló
-    
-    public SciFi(String id, String title, String author) {
-        super(id, title, author);
-        count++;
-    }
-    
-    @Override
-    public int getLoanDuration() { return LOAN_DURATION; }
-    
-    @Override
-    public String getCategory() { return "Sci-fi"; }
-    
-    public static int getCount() { return count; }
+   private static final int LOAN_DURATION = 14;  // napok
+   private static int count = 0;                  // Példányszámláló
+
+   public main.model.SciFi(
+   String id, String
+   title,
+   String author)
+
+   {
+      super(id, title, author);
+      count++;
+   }
+
+   @Override
+   public int getLoanDuration() {
+      return LOAN_DURATION;
+   }
+
+   @Override
+   public String getCategory() {
+      return "Sci-fi";
+   }
+
+   public static int getCount() {
+      return count;
+   }
 }
 ```
 
 **Hasonló struktúra a többi osztályhoz:**
-- `Drama.java` (LOAN_DURATION = 28)
-- `History.java` (LOAN_DURATION = 21)
-- `Children.java` (LOAN_DURATION = 14)
-- `Technical.java` (LOAN_DURATION = 7)
+- `main.model.Drama.java` (LOAN_DURATION = 28)
+- `main.model.History.java` (LOAN_DURATION = 21)
+- `main.model.Children.java` (LOAN_DURATION = 14)
+- `main.model.Technical.java` (LOAN_DURATION = 7)
 
 ---
 
-#### 4.2.3 Member Osztály
+#### 4.2.3 main.model.Member Osztály
 
 ```java
-public class Member {
+public class main.model.Member {
     private final String memberId;     // Egyedi azonosító (000001-999999)
     private final String name;         // Tag neve
     private int loanedBooks;           // Aktív kölcsönzések száma (max 3)
     
     // Konstruktor
-    public Member(String memberId, String name) { ... }
+    public main.model.Member(String memberId, String name) { ... }
     
     // Getterek
     public String getMemberId() { ... }
@@ -330,16 +344,16 @@ public class Member {
 
 ---
 
-#### 4.2.4 Loan Osztály
+#### 4.2.4 main.model.Loan Osztály
 
 ```java
-public class Loan {
+public class main.model.Loan {
     private final String bookId;
     private final String memberId;
     private final LocalDate loanDate;
     private final LocalDate dueDate;
     
-    public Loan(String bookId, String memberId, LocalDate loanDate, int loanDuration) {
+    public main.model.Loan(String bookId, String memberId, LocalDate loanDate, int loanDuration) {
         this.bookId = bookId;
         this.memberId = memberId;
         this.loanDate = loanDate;
@@ -519,7 +533,7 @@ HS-012;000042;2025-11-15
 
 ### 6.1 Egyedi Kivétel Osztályok
 
-#### 6.1.1 InvalidBookIdException
+#### 6.1.1 main.exception.InvalidBookIdException
 **Mikor dobódik:** 
 - Könyv azonosító formátuma helytelen (nem felel meg a [KATEGÓRIA]-[SZÁM] mintának)
 - Könyv azonosító nem létezik a rendszerben
@@ -527,12 +541,12 @@ HS-012;000042;2025-11-15
 **Példa üzenetek:**
 ```
 "Invalid book ID: 'XY-123'. Expected format: [SF|DR|HS|CH|TC]-[001-999]"
-"Book ID 'SF-999' does not exist in the library."
+"main.model.Book ID 'SF-999' does not exist in the library."
 ```
 
 ---
 
-#### 6.1.2 InvalidMemberException
+#### 6.1.2 main.exception.InvalidMemberException
 **Mikor dobódik:**
 - Tagsági azonosító formátuma helytelen
 - Tagsági azonosító nem létezik a rendszerben
@@ -541,8 +555,8 @@ HS-012;000042;2025-11-15
 **Példa üzenetek:**
 ```
 "Invalid member ID: 'ABC123'. Expected numeric ID: 000001-999999"
-"Member ID '000999' not found."
-"Member '000042' has reached the maximum loan limit (3 books)."
+"main.model.Member ID '000999' not found."
+"main.model.Member '000042' has reached the maximum loan limit (3 books)."
 ```
 
 ---
@@ -587,19 +601,31 @@ HS-012;000042;2025-11-15
 4. Az alkalmazás soha ne omoljon össze
 
 **Példa:**
+
 ```java
-try {
-    loanBook(bookId, memberId);
-} catch (InvalidBookIdException e) {
-    displayError(e.getMessage());
-    promptReturnToMenu();
-} catch (InvalidMemberException e) {
-    displayError(e.getMessage());
-    offerMemberCreation();
-} catch (FileOperationException e) {
-    displayError("System error: " + e.getMessage());
-    logError(e);
-    promptReturnToMenu();
+import main.exception.InvalidBookIdException;
+import main.exception.InvalidMemberException;try{
+loanBook(bookId, memberId);
+}catch(
+InvalidBookIdException e){
+
+displayError(e.getMessage());
+
+promptReturnToMenu();
+}catch(
+InvalidMemberException e){
+
+displayError(e.getMessage());
+
+offerMemberCreation();
+}catch(
+FileOperationException e){
+
+displayError("System error: "+e.getMessage());
+
+logError(e);
+
+promptReturnToMenu();
 }
 ```
 
@@ -641,8 +667,8 @@ try {
 ╚══════════════════════════════════════╝
 
 1. List Books by Category
-2. Loan a Book
-3. Return a Book
+2. main.model.Loan a main.model.Book
+3. Return a main.model.Book
 4. Search Books
 5. List All Fines
 6. View Statistics
@@ -669,11 +695,11 @@ Select an option (1-7): _
 ╚══════════════════════════════════════╝
 
 1. Sci-fi (14 books)
-2. Drama (8 books)
-3. History (12 books)
-4. Children (10 books)
-5. Technical (6 books)
-6. Back to Main Menu
+2. main.model.Drama (8 books)
+3. main.model.History (12 books)
+4. main.model.Children (10 books)
+5. main.model.Technical (6 books)
+6. Back to main.Main Menu
 
 Select category (1-6): 1
 
@@ -699,19 +725,19 @@ Press Enter to return to menu...
 ║   LOAN A BOOK                        ║
 ╚══════════════════════════════════════╝
 
-Enter Book ID: SF-042
-Enter Member ID: 000123
+Enter main.model.Book ID: SF-042
+Enter main.model.Member ID: 000123
 
-✓ Book: Foundation by Isaac Asimov
-✓ Member: John Doe (ID: 000123)
+✓ main.model.Book: Foundation by Isaac Asimov
+✓ main.model.Member: John Doe (ID: 000123)
 ✓ Current loans: 1/3
 
-Loan Date: 2025-12-01
+main.model.Loan Date: 2025-12-01
 Due Date: 2025-12-15 (14 days)
 
 Confirm loan? (Y/N): Y
 
-✓ Book successfully loaned!
+✓ main.model.Book successfully loaned!
 
 Press Enter to return to menu...
 ```
@@ -725,7 +751,7 @@ Press Enter to return to menu...
 ║   RETURN A BOOK                      ║
 ╚══════════════════════════════════════╝
 
-Enter Member ID: 000123
+Enter main.model.Member ID: 000123
 
 Active loans for John Doe:
 
@@ -737,15 +763,15 @@ Active loans for John Doe:
          Loaned: 2025-11-20 | Due: 2025-12-18
          ✓ On time (17 days remaining)
 
-Enter Book ID to return: SF-005
+Enter main.model.Book ID to return: SF-005
 
 ⚠ FINE NOTICE
-Book is 33 days overdue.
+main.model.Book is 33 days overdue.
 Total fine: 1,650 HUF (33 days × 50 HUF/day)
 
 Confirm return? (y/n): y
 
-✓ Book returned successfully.
+✓ main.model.Book returned successfully.
 ✓ Fine recorded: 1,650 HUF
 
 Press Enter to return to menu...
@@ -763,7 +789,7 @@ Press Enter to return to menu...
 📊 Most Popular Category:
    Sci-fi (142 total loans)
 
-⏰ Most Frequently Late Member:
+⏰ Most Frequently Late main.model.Member:
    Kovács János (ID: 000123)
    Late returns: 8
 
@@ -786,7 +812,7 @@ Press Enter to return to menu...
 ║   UNPAID FINES                       ║
 ╚══════════════════════════════════════╝
 
-Member ID   | Member Name   | Book ID   | Late    | Fine
+main.model.Member ID   | main.model.Member Name   | main.model.Book ID   | Late    | Fine
 ------------|---------------|-----------|---------|----------
 000123      | Kovács János  | SF-005    | 33 days | 1 650 Ft
 000456      | Nagy Anna     | DR-012    | 12 days |   600 Ft
@@ -828,24 +854,24 @@ Lehetséges funkciók:
 ### 9.1 Egység Tesztelés (Unit Testing)
 
 **Tesztelendő Osztályok:**
-- `Book` és minden alosztály (SciFi, Drama, stb.)
-- `Member`
-- `Loan` (különösen a büntetésszámítás)
+- `main.model.Book` és minden alosztály (main.model.SciFi, main.model.Drama, stb.)
+- `main.model.Member`
+- `main.model.Loan` (különösen a büntetésszámítás)
 - `Fine`
 - Bemenet érvényesítő metódusok
 
 **Teszt Esetek (Minimum):**
 
-**Book Osztály:**
+**main.model.Book Osztály:**
 - Megváltoztathatatlan mezők nem változtathatók
 - Kölcsönzési időtartam helyes minden kategóriára
 - Példányszámlálók helyesen inkrementálódnak
 
-**Member Osztály:**
+**main.model.Member Osztály:**
 - Kölcsönzési limit betartása (max 3)
 - Kölcsönzésszám helyes inkrementálása/dekrementálása
 
-**Loan Osztály:**
+**main.model.Loan Osztály:**
 - Helyes határidő számítás minden kategóriára
 - Helyes büntetésszámítás különböző késedelmes időtartamokra
 - Nem késedelmes esetek kezelése (büntetés = 0)
@@ -938,16 +964,16 @@ DR-001;000001;2025-11-15
 ```
 src/
 ├── main/
-│   ├── Main.java                  // Belépési pont
+│   ├── main.Main.java                  // Belépési pont
 │   ├── model/
-│   │   ├── Book.java              // Absztrakt osztály
-│   │   ├── SciFi.java
-│   │   ├── Drama.java
-│   │   ├── History.java
-│   │   ├── Children.java
-│   │   ├── Technical.java
-│   │   ├── Member.java
-│   │   ├── Loan.java
+│   │   ├── main.model.Book.java              // Absztrakt osztály
+│   │   ├── main.model.SciFi.java
+│   │   ├── main.model.Drama.java
+│   │   ├── main.model.History.java
+│   │   ├── main.model.Children.java
+│   │   ├── main.model.Technical.java
+│   │   ├── main.model.Member.java
+│   │   ├── main.model.Loan.java
 │   │   └── Fine.java
 │   ├── service/
 │   │   ├── BookService.java       // Könyv műveletek
@@ -959,8 +985,8 @@ src/
 │   │   ├── ConsoleUI.java         // Konzol segédprogramok
 │   │   └── AnsiColors.java        // ANSI színkódok
 │   ├── exception/
-│   │   ├── InvalidBookIdException.java
-│   │   ├── InvalidMemberException.java
+│   │   ├── main.exception.InvalidBookIdException.java
+│   │   ├── main.exception.InvalidMemberException.java
 │   │   ├── InvalidInputException.java
 │   │   └── FileOperationException.java
 │   └── util/
