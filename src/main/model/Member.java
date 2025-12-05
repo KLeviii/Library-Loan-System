@@ -3,46 +3,63 @@ package main.model;
 import main.exception.LoanLimitReachedException;
 
 public class Member {
+    private String memberId;
     private String name;
-    private int id;
-    private int currentlyLoanedBooks;
+    private int loanedBooks;
 
-    public Member(String name, int id, int currentlyLoanedBooks) {
+    public Member(String name, String memberId, int loanedBooks) {
         this.name = name;
-        this.id = id;
-        this.currentlyLoanedBooks =currentlyLoanedBooks;
+        this.memberId = memberId;
+        setLoanedBooks(loanedBooks);
     }
 
-    public void setName(String name) {
+    public Member(String name, String memberId) {
         this.name = name;
+        this.memberId = memberId;
+        setLoanedBooks(0);
+    }
+
+    public String getMemberId() {
+        return memberId;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getId() {
-        return id;
+    public int getLoanedBooks() {
+        return loanedBooks;
     }
 
-    public void setCurrentlyLoanedBooks(int currentlyLoanedBooks) throws LoanLimitReachedException {
-        if (currentlyLoanedBooks < 3){
-        throw new LoanLimitReachedException("WARNING: You've reached the maximum books at once");
+    public void setLoanedBooks(int count) throws LoanLimitReachedException {
+        if (!canLoanMore()) {
+            throw new LoanLimitReachedException("WARNING: You've reached the maximum books at once");
         }
-        this.currentlyLoanedBooks=currentlyLoanedBooks;
+        this.loanedBooks = count;
     }
 
-    public int getCurrentlyLoanedBooks() {
-        return currentlyLoanedBooks;
+    public boolean canLoanMore() {
+        return loanedBooks < 3;
     }
 
+    public void incrementLoans() {
+        if (canLoanMore()) loanedBooks++;
+    }
+
+    public void decrementLoans() {
+        if (loanedBooks > 0) loanedBooks++;
+
+    }
+
+
+    // Hell nah     ;KLevi
     @Override
     public String toString() {
-        return  "╔══════════════════════════════╗\n" +
+        return "╔══════════════════════════════╗\n" +
                 "║           MEMBER             ║\n" +
                 "╠══════════════════════════════╣\n" +
                 "║ Name: " + name + "\n" +
-                "║ ID:   " + id + "\n" +
+                "║ ID:   " + memberId + "\n" +
                 "╚══════════════════════════════╝";
     }
 }

@@ -13,10 +13,9 @@ public abstract class Book {
     private final String id;
     private final String title;
     private final String author;
-    private int loanedTo;
+    private String loanedTo;
 
-
-    public Book(String id, String title, String author, int loanedTo) {
+    public Book(String id, String title, String author, String loanedTo) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -27,28 +26,32 @@ public abstract class Book {
         this.id = id;
         this.title = title;
         this.author = author;
-        setLoanedTo(0);
+        setLoanedTo(null);
     }
 
     public String getId() {
         return id;
     }
-
     public String getTitle() {
         return title;
     }
-
     public String getAuthor() {
         return author;
     }
 
-    public int getLoanedTo() {
+    public String getLoanedTo() {
         return loanedTo;
     }
-
-    public void setLoanedTo(int loanedTo) {
+    public void setLoanedTo(String loanedTo) {
         this.loanedTo = loanedTo;
     }
+
+    public abstract int getLoanDuration();
+    public abstract String getCategory();
+
+
+
+
 
     public void checkBookId(String bookid) throws InvalidReadingException, InvalidBookIdException {
         boolean foundBook = false;

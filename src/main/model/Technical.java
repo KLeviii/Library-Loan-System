@@ -1,10 +1,10 @@
 package main.model;
 
 public final class Technical extends Book{
-    private static final int loanDuration = 7;
+    private static final int LOAN_DURATION = 7;
     private static int count = 0;
 
-    public Technical(String id, String title, String author, int loanedTo) {
+    public Technical(String id, String title, String author, String loanedTo) {
         super(id, title, author, loanedTo);
         count++;
     }
@@ -14,8 +14,14 @@ public final class Technical extends Book{
         count++;
     }
 
-    public static String getLoanDuration() {
-        return loanDuration + " days";
+    @Override
+    public int getLoanDuration() {
+        return LOAN_DURATION;
+    }
+
+    @Override
+    public String getCategory() {
+        return "Technical";
     }
 
     public static int getCount() {
