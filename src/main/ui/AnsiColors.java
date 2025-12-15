@@ -1,3 +1,7 @@
+/* AI:
+The entire class
+ */
+
 package main.ui;
 
 public class AnsiColors {
@@ -31,7 +35,4 @@ public class AnsiColors {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
-
-    // KLevi:
-    // Made by.: Claude
 }
