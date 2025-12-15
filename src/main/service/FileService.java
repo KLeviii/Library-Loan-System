@@ -1,9 +1,15 @@
+/* AI:
+java.nio.charset.StandardCharsets;
+Atomic file writing
+ */
+
 package main.service;
 
 import main.model.*;
 import main.exception.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -177,11 +183,128 @@ public class FileService {
         return new Fine(memberId, bookId, overdueDate, amount);
     }
 
+    public void saveBooks(List<Book> books) throws FileOperationException {
+        Path path = Paths.get(DATA_DIR + "loanableBooks.txt");
+        Path tempPath = path.resolveSibling(path.getFileName() + ".tmp");
 
+        List<String> lines = new ArrayList<>();
 
-    // TODO:
-    // - saveBooks()
-    // - saveMembers()
-    // - saveLoans()
-    // - saveFines()
+        for (Book book : books) {
+            String line = book.getId() + ";" +
+                    book.getTitle() + ";" +
+                    book.getAuthor();
+            lines.add(line);
+        }
+
+        try {
+            Files.createDirectories(path.getParent());
+
+            Files.write(tempPath, lines, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+
+            Files.move(tempPath, path, StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException e) {
+            try {
+                Files.deleteIfExists(tempPath);
+            } catch (IOException ignored) {
+            }
+            throw new FileOperationException("Error saving books: " + e.getMessage());
+        }
+    }
+
+    public void saveMembers(List<Member> members) throws FileOperationException {
+        Path path = Paths.get(DATA_DIR + "members.txt");
+        Path tempPath = path.resolveSibling(path.getFileName() + ".tmp");
+
+        List<String> lines = new ArrayList<>();
+
+        for (Member member : members) {
+            String line = member.getName() + ";" +
+                    member.getMemberId();
+            lines.add(line);
+        }
+
+        try {
+            Files.createDirectories(path.getParent());
+
+            Files.write(tempPath, lines, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+
+            Files.move(tempPath, path, StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException e) {
+            try {
+                Files.deleteIfExists(tempPath);
+            } catch (IOException ignored) {
+            }
+            throw new FileOperationException("Error saving members: " + e.getMessage());
+        }
+    }
+
+    public void saveLoans(List<Loan> loans) throws FileOperationException {
+        Path path = Paths.get(DATA_DIR + "loanedBooks.txt");
+        Path tempPath = path.resolveSibling(path.getFileName() + ".tmp");
+
+        List<String> lines = new ArrayList<>();
+
+        for (Loan loan : loans) {
+            String line = loan.getBookId() + ";" +
+                    loan.getMemberId() + ";" +
+                    loan.getLoanDate();
+            lines.add(line);
+        }
+
+        try {
+            Files.createDirectories(path.getParent());
+
+            Files.write(tempPath, lines, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+
+            Files.move(tempPath, path, StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException e) {
+            try {
+                Files.deleteIfExists(tempPath);
+            } catch (IOException ignored) {
+            }
+            throw new FileOperationException("Error saving loans: " + e.getMessage());
+        }
+    }
+
+    public void saveFines(List<Fine> fines) throws FileOperationException {
+        Path path = Paths.get(DATA_DIR + "fines.txt");
+        Path tempPath = path.resolveSibling(path.getFileName() + ".tmp");
+
+        List<String> lines = new ArrayList<>();
+
+        for (Fine fine : fines) {
+            String line = fine.getMemberId() + ";" +
+                    fine.getBookId() + ";" +
+                    fine.getMemberId() + ";" +
+                    fine.getOverdueDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ";" +
+                    fine.getAmount();
+            lines.add(line);
+        }
+
+        try {
+            Files.createDirectories(path.getParent());
+
+            Files.write(tempPath, lines, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+
+            Files.move(tempPath, path, StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE);
+        } catch (IOException e) {
+            try {
+                Files.deleteIfExists(tempPath);
+            } catch (IOException ignored) {
+            }
+            throw new FileOperationException("Error saving fines: " + e.getMessage());
+        }
+    }
 }

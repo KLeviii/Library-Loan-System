@@ -21,6 +21,9 @@ public class Fine {
     public String getBookId() {
         return bookId;
     }
+    public LocalDate getOverdueDate() {
+        return overdueDate;
+    }
     public int getAmount() {
         return amount;
     }
