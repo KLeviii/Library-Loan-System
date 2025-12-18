@@ -1,5 +1,6 @@
-/* AI:
-The entire class
+/**
+ * AI:
+ * import java.util.stream.Collectors;
  */
 
 package main.service;
