@@ -24,6 +24,11 @@ public class BookService {
                 .orElseThrow(() -> new InvalidBookIdException("Book not found: " + id));
     }
 
+    public boolean bookExists(String bookId) {
+        return books.stream()
+                .anyMatch(m -> m.getId().equals(bookId));
+    }
+
     public List<Book> getBooksByCategory(String category) {
         return books.stream()
                 .filter(b -> b.getCategory().equals(category))

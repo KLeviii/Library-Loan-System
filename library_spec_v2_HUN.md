@@ -725,19 +725,19 @@ Press Enter to return to menu...
 ║   LOAN A BOOK                        ║
 ╚══════════════════════════════════════╝
 
-Enter main.model.Book ID: SF-042
-Enter main.model.Member ID: 000123
+Enter Book ID: SF-042
+Enter Member ID: 000123
 
-✓ main.model.Book: Foundation by Isaac Asimov
-✓ main.model.Member: John Doe (ID: 000123)
+✓ Book: Foundation by Isaac Asimov
+✓ Member: John Doe (ID: 000123)
 ✓ Current loans: 1/3
 
-main.model.Loan Date: 2025-12-01
+Loan Date: 2025-12-01
 Due Date: 2025-12-15 (14 days)
 
 Confirm loan? (Y/N): Y
 
-✓ main.model.Book successfully loaned!
+Book successfully loaned!
 
 Press Enter to return to menu...
 ```

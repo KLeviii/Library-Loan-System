@@ -44,7 +44,6 @@ public class MemberService {
     }
 
     public Member createMember(String name) throws InvalidMemberException {
-        // Név validálás
         if (!isValidName(name)) {
             throw new InvalidMemberException(
                     "Invalid name: '" + name + "'. Names can only contain letters, spaces, and hyphens."
