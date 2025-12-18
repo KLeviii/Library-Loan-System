@@ -64,4 +64,8 @@ public class BookService {
                         .thenComparing(Book::getTitle))
                 .collect(Collectors.toList());
     }
+
+    public List<Book> getAllBooks() {
+        return new ArrayList<>(books);
+    }
 }
