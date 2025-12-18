@@ -695,11 +695,11 @@ Select an option (1-7): _
 ╚══════════════════════════════════════╝
 
 1. Sci-fi (14 books)
-2. main.model.Drama (8 books)
-3. main.model.History (12 books)
-4. main.model.Children (10 books)
-5. main.model.Technical (6 books)
-6. Back to main.Main Menu
+2. Drama (8 books)
+3. History (12 books)
+4. Children (10 books)
+5. Technical (6 books)
+6. Back to main menu
 
 Select category (1-6): 1
 

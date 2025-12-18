@@ -32,9 +32,11 @@ public abstract class Book {
     public String getId() {
         return id;
     }
+
     public String getTitle() {
         return title;
     }
+
     public String getAuthor() {
         return author;
     }
@@ -42,29 +44,29 @@ public abstract class Book {
     public boolean isAvailable() {
         return loanedTo != null;
     }
+
     public String getLoanedTo() {
         return loanedTo;
     }
+
     public void setLoanedTo(String loanedTo) {
         this.loanedTo = loanedTo;
     }
 
     public abstract int getLoanDuration();
+
     public abstract String getCategory();
-
-
-
 
 
     public void checkBookId(String bookid) throws InvalidReadingException, InvalidBookIdException {
         boolean foundBook = false;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("books.txt"))) {
             String line;
-            while ((line = bufferedReader.readLine())!=null) {
-                StringTokenizer st = new StringTokenizer(line,";");
-                if (st.hasMoreTokens()){
+            while ((line = bufferedReader.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, ";");
+                if (st.hasMoreTokens()) {
                     String currentBookId = st.nextToken();
-                    if (currentBookId.equals(bookid)){
+                    if (currentBookId.equals(bookid)) {
                         foundBook = true;
                         break;
                     }
@@ -73,7 +75,7 @@ public abstract class Book {
         } catch (IOException ioe) {
             throw new InvalidReadingException("Error reading the books.");
         }
-        if (!foundBook){
+        if (!foundBook) {
             throw new InvalidBookIdException("Couldn't find this book!");
         }
     }
@@ -82,11 +84,11 @@ public abstract class Book {
         boolean foundMember = false;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("members.txt"))) {
             String line;
-            while ((line = bufferedReader.readLine())!=null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(line, ";");
-                if(st.hasMoreTokens()){
+                if (st.hasMoreTokens()) {
                     String currentMemberId = st.nextToken();
-                    if (Integer.parseInt(currentMemberId) == memberId){
+                    if (Integer.parseInt(currentMemberId) == memberId) {
                         foundMember = true;
                         break;
                     }
@@ -96,7 +98,7 @@ public abstract class Book {
         } catch (IOException ioe) {
             throw new InvalidReadingException("Error reading the members.");
         }
-        if (!foundMember){
+        if (!foundMember) {
             throw new InvalidMemberException("Couldn't find this member!");
         }
     }
