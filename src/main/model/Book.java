@@ -39,6 +39,9 @@ public abstract class Book {
         return author;
     }
 
+    public boolean isAvailable() {
+        return loanedTo != null;
+    }
     public String getLoanedTo() {
         return loanedTo;
     }
