@@ -751,7 +751,7 @@ Press Enter to return to menu...
 ║   RETURN A BOOK                      ║
 ╚══════════════════════════════════════╝
 
-Enter main.model.Member ID: 000123
+Enter Member ID: 000123
 
 Active loans for John Doe:
 
@@ -763,15 +763,15 @@ Active loans for John Doe:
          Loaned: 2025-11-20 | Due: 2025-12-18
          ✓ On time (17 days remaining)
 
-Enter main.model.Book ID to return: SF-005
+Enter Book ID to return: SF-005
 
 ⚠ FINE NOTICE
-main.model.Book is 33 days overdue.
+Book is 33 days overdue.
 Total fine: 1,650 HUF (33 days × 50 HUF/day)
 
 Confirm return? (y/n): y
 
-✓ main.model.Book returned successfully.
+✓ Book returned successfully.
 ✓ Fine recorded: 1,650 HUF
 
 Press Enter to return to menu...

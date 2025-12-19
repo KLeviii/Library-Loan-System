@@ -66,7 +66,7 @@ public class LoanService {
         Loan loan = new Loan(bookId, memberId, loanDate, loanDuration);
 
         book.setLoanedTo(memberId);
-        member.incrementLoans();
+        memberService.addBookToMember(memberId, bookId);
         loans.add(loan);
 
         return loan;
@@ -92,7 +92,7 @@ public class LoanService {
         book.setLoanedTo(null);
 
         Member member = memberService.findMemberById(memberId);
-        member.decrementLoans();
+        memberService.removeBookFromMember(memberId, bookId);
 
         loans.remove(loan);
 

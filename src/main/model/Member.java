@@ -2,21 +2,32 @@ package main.model;
 
 import main.exception.LoanLimitReachedException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Member {
     private String memberId;
     private String name;
     private int loanedBooks;
+    private List<String> loanedBookIds;
 
-    public Member(String name, String memberId, int loanedBooks) {
+
+    public Member(String name, String memberId, int loanedBooks, List<String> loanedBookIds) {
         this.name = name;
         this.memberId = memberId;
         setLoanedBooks(loanedBooks);
+        this.loanedBookIds = loanedBookIds;
     }
 
     public Member(String name, String memberId) {
         this.name = name;
         this.memberId = memberId;
         setLoanedBooks(0);
+        this.loanedBookIds = new ArrayList<>();
+    }
+
+    public List<String> getLoanedBookIds() {
+        return new ArrayList<>(loanedBookIds);
     }
 
     public String getMemberId() {
@@ -38,6 +49,24 @@ public class Member {
         this.loanedBooks = count;
     }
 
+    public void addLoanedBook(String bookId) {
+        if (!hasLoanedBook(bookId) && canLoanMore()) {
+            loanedBookIds.add(bookId);
+        }
+    }
+
+    public void removeLoanedBook(String bookId) {
+        loanedBookIds.remove(bookId);
+    }
+
+    public boolean hasLoanedBook(String bookId) {
+        return loanedBookIds.contains(bookId);
+    }
+
+    public void syncLoanCount() {
+        this.loanedBooks = loanedBookIds.size();
+    }
+
     public boolean canLoanMore() {
         return loanedBooks < 3;
     }
@@ -51,8 +80,7 @@ public class Member {
 
     }
 
-
-    // Hell nah     ;KLevi
+    // Hell nah
     @Override
     public String toString() {
         return "╔══════════════════════════════╗\n" +

@@ -6,7 +6,10 @@
 package main.service;
 
 import main.model.Member;
+import main.model.Book;
 import main.exception.InvalidMemberException;
+import main.exception.InvalidBookIdException;
+
 import java.util.*;
 
 public class MemberService {
@@ -87,9 +90,86 @@ public class MemberService {
         Member member = findMemberById(memberId);
         return member.canLoanMore();
     }
+
     public int getMemberLoanCount(String memberId) throws InvalidMemberException {
         Member member = findMemberById(memberId);
         return member.getLoanedBooks();
+    }
+
+    public void addBookToMember(String memberId, String bookId) throws InvalidMemberException {
+        Member member = findMemberById(memberId);
+
+        if (!member.canLoanMore()) {
+            throw new InvalidMemberException("Member '" + memberId + "' has reached the maximum loan limit (3 books).");
+        }
+
+        member.addLoanedBook(bookId);
+        member.incrementLoans();
+    }
+
+    public void removeBookFromMember(String memberId, String bookId) throws InvalidMemberException {
+        Member member = findMemberById(memberId);
+
+        if (!member.hasLoanedBook(bookId)) {
+            throw new InvalidMemberException("Member '" + memberId + "' has not loaned book '" + bookId + "'.");
+        }
+
+        member.removeLoanedBook(bookId);
+        member.decrementLoans();
+    }
+
+    public List<String> getMemberLoanedBookIds(String memberId) throws InvalidMemberException {
+        Member member = findMemberById(memberId);
+        return member.getLoanedBookIds();
+    }
+
+    public List<Book> getMemberLoanedBooks(String memberId, BookService bookService)
+            throws InvalidMemberException {
+        Member member = findMemberById(memberId);
+        List<String> bookIds = member.getLoanedBookIds();
+        List<Book> books = new ArrayList<>();
+
+        for (String bookId : bookIds) {
+            try {
+                Book book = bookService.findBookById(bookId);
+                books.add(book);
+            } catch (InvalidBookIdException e) {
+                System.err.println("Warning: Book " + bookId + " not found for member " + memberId);
+            }
+        }
+
+        return books;
+    }
+
+    public boolean hasMemberLoanedBook(String memberId, String bookId) throws InvalidMemberException {
+        Member member = findMemberById(memberId);
+        return member.hasLoanedBook(bookId);
+    }
+
+    public void syncMemberLoanCounts() {
+        for (Member member : members) {
+            member.syncLoanCount();
+        }
+    }
+
+    public void rebuildMemberLoanLists(List<String> loanBookIds, List<String> loanMemberIds) {
+        for (Member member : members) {
+            member.getLoanedBookIds().clear();
+            member.syncLoanCount();
+        }
+
+        for (int i = 0; i < loanBookIds.size(); i++) {
+            String bookId = loanBookIds.get(i);
+            String memberId = loanMemberIds.get(i);
+
+            try {
+                Member member = findMemberById(memberId);
+                member.addLoanedBook(bookId);
+                member.incrementLoans();
+            } catch (InvalidMemberException e) {
+                System.err.println("Warning: Member " + memberId + " not found during sync");
+            }
+        }
     }
 
     public List<Member> getAllMembers() {

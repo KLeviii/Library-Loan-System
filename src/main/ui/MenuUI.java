@@ -1,12 +1,16 @@
 package main.ui;
 
+import main.exception.InvalidBookIdException;
+import main.exception.InvalidMemberException;
 import main.model.Book;
+import main.model.Loan;
 import main.model.Member;
 import main.service.*;
 
 import static main.ui.AnsiColors.*;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Scanner;
 
@@ -205,9 +209,13 @@ public class MenuUI {
             System.out.println("Loan Date: " + localDate);
             System.out.println("Due Date: " + localDate.plusDays(book.getLoanDuration()) + " (" + book.getLoanDuration() + " days)\n");
             if (confirm("Confirm loan? (Y/N): ")) {
-                loanService.loanBook(bookIdInput, memberIdInput);
-                System.out.println();
-                System.out.println("Book successfully loaned!\n");
+                try {
+                    Loan loan = loanService.loanBook(bookIdInput, memberIdInput);
+                    System.out.println("\nBook successfully loaned!");
+                    System.out.println("Due date: " + loan.getDueDate());
+                } catch (InvalidBookIdException | InvalidMemberException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
             } else {
                 System.out.println();
                 System.err.println("Loan process terminated!\n");
@@ -217,5 +225,60 @@ public class MenuUI {
         }
     }
 
-    // TODO: Implement 4 methods
+    private void returnBook() {
+        clearScreen();
+        System.out.println(cyan("╔══════════════════════════════════════╗"));
+        System.out.println(cyan("║   RETURN A BOOK                      ║"));
+        System.out.println(cyan("╚══════════════════════════════════════╝\n"));
+        String memberIdInput = readString("Enter Member ID: ");
+        System.out.println();
+        System.out.println("Active loans for " + memberService.findMemberById(memberIdInput).getName() + ":\n");
+
+        if (!memberService.memberExists(memberIdInput)) {
+            System.out.println();
+            System.err.println("Invalid member ID!");
+            returnBook();
+        } else if (memberService.getMemberLoanCount(memberIdInput) == 0) {
+            System.out.println();
+            System.err.println("This member does not have any books loaned!");
+            loanBook();
+        } else {
+            try {
+                Member member = memberService.findMemberById(memberIdInput);
+                System.out.println();
+                int index = 0;
+                for (Book loanedBook : memberService.getMemberLoanedBooks(memberIdInput, bookService)) {
+                    Loan currentLoan = loanService.getMemberLoans(memberIdInput).get(index);
+                    System.out.println("[" + loanedBook.getId() + "] " + loanedBook.getTitle());
+                    System.out.println("         Loaned: " + currentLoan.getLoanDate() + " | Due: " + currentLoan.getDueDate());
+                    if (currentLoan.isOverdue()) {
+                        System.out.println("         ⚠ OVERDUE: " + currentLoan.getDaysOverdue() + " days | Fine: " + currentLoan.calculateFine() + " HUF\n");
+                    } else {
+                        System.out.println("         ✓ On time (" + ChronoUnit.DAYS.between(LocalDate.now(), currentLoan.getDueDate()) + " days remaining)\n");
+                    }
+                    index++;
+                }
+                readString("Enter Book ID to return: ");
+            } catch (InvalidMemberException e) {
+                System.err.println("Error: " + e.getMessage());
+            }
+
+            /**
+             * ⚠ FINE NOTICE
+             * Book is 33 days overdue.
+             * Total fine: 1,650 HUF (33 days × 50 HUF/day)
+             *
+             * Confirm return? (y/n): y
+             *
+             * ✓ Book returned successfully.
+             * ✓ Fine recorded: 1,650 HUF
+             *
+             * Implementálni
+             */
+            readInt("Press Enter to return to menu...");
+            displayMainMenu();
+        }
+
+        // TODO: Implement 3 methods
+    }
 }
