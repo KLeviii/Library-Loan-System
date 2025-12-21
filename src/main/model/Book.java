@@ -42,7 +42,7 @@ public abstract class Book {
     }
 
     public boolean isAvailable() {
-        return loanedTo != null;
+        return loanedTo == null;
     }
 
     public String getLoanedTo() {

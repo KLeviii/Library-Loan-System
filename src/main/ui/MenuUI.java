@@ -3,6 +3,7 @@ package main.ui;
 import main.exception.InvalidBookIdException;
 import main.exception.InvalidMemberException;
 import main.model.Book;
+import main.model.Fine;
 import main.model.Loan;
 import main.model.Member;
 import main.service.*;
@@ -19,12 +20,14 @@ public class MenuUI {
     private BookService bookService;
     private MemberService memberService;
     private LoanService loanService;
+    private FileService fileService;
 
-    public MenuUI(BookService bookService, MemberService memberService, LoanService loanService) {
+    public MenuUI(BookService bookService, MemberService memberService, LoanService loanService, FileService fileService) {
         this.scanner = new Scanner(System.in);
         this.bookService = bookService;
         this.memberService = memberService;
         this.loanService = loanService;
+        this.fileService = fileService;
     }
 
     public void start() {
@@ -77,21 +80,33 @@ public class MenuUI {
 
     private int readInt(String prompt) {
         System.out.print(prompt);
-        try {
-            return Integer.parseInt(scanner.next().trim());
-        } catch (NumberFormatException e) {
-            return -1;
+        while (true) {
+            try {
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    return -1;
+                }
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid number. " + prompt);
+            }
         }
     }
 
     private String readString(String prompt) {
         System.out.print(prompt);
-        return scanner.next().trim();
+        return scanner.nextLine().trim();
     }
 
     private boolean confirm(String prompt) {
-        System.out.println(prompt);
-        return scanner.next().equalsIgnoreCase("Y");
+        System.out.print(prompt);
+        String input = scanner.nextLine().trim();
+        return input.equalsIgnoreCase("Y") || input.equalsIgnoreCase("I");
+    }
+
+    private void waitForEnter(String prompt) {
+        System.out.print(prompt);
+        scanner.nextLine();
     }
 
     private void listBooksByCategory() {
@@ -130,10 +145,9 @@ public class MenuUI {
 
     private void iterBooks(List<Book> bookList) {
         for (Book book : bookList) {
-            System.out.println("[" + book.getId() + "] " + book.getTitle() + " by " + book.getAuthor() + " - [" + (book.isAvailable() ? "AVAILABLE" : "LOANED until ") + loanService.getExpectedReturnDate(book.getId()) + "]\n");
+            System.out.println("[" + book.getId() + "] " + book.getTitle() + " by " + book.getAuthor() + " - [" + getBookStatus(book) + "]\n");
         }
-        readInt("Press Enter to return to menu...");
-        displayMainMenu();
+        waitForEnter("Press Enter to return to menu...");
     }
 
     private void listScifiBooks() {
@@ -220,8 +234,7 @@ public class MenuUI {
                 System.out.println();
                 System.err.println("Loan process terminated!\n");
             }
-            readInt("Press Enter to return to menu...");
-            displayMainMenu();
+            waitForEnter("Press Enter to return to menu...");
         }
     }
 
@@ -243,8 +256,8 @@ public class MenuUI {
             System.err.println("This member does not have any books loaned!");
             loanBook();
         } else {
+            Member member = memberService.findMemberById(memberIdInput);
             try {
-                Member member = memberService.findMemberById(memberIdInput);
                 System.out.println();
                 int index = 0;
                 for (Book loanedBook : memberService.getMemberLoanedBooks(memberIdInput, bookService)) {
@@ -258,27 +271,302 @@ public class MenuUI {
                     }
                     index++;
                 }
-                readString("Enter Book ID to return: ");
             } catch (InvalidMemberException e) {
                 System.err.println("Error: " + e.getMessage());
             }
 
-            /**
-             * ⚠ FINE NOTICE
-             * Book is 33 days overdue.
-             * Total fine: 1,650 HUF (33 days × 50 HUF/day)
-             *
-             * Confirm return? (y/n): y
-             *
-             * ✓ Book returned successfully.
-             * ✓ Fine recorded: 1,650 HUF
-             *
-             * Implementálni
-             */
-            readInt("Press Enter to return to menu...");
-            displayMainMenu();
+            String bookToReturn;
+            do {
+                bookToReturn = readString("Enter a valid Book ID to return: ");
+            } while (!member.hasLoanedBook(bookToReturn));
+            Fine fine = loanService.returnBook(bookToReturn, memberIdInput);
+            System.out.println();
+            if (fine != null) {
+                System.out.println("⚠ FINE NOTICE");
+                System.out.println("Book is " + ChronoUnit.DAYS.between(fine.getOverdueDate(), LocalDate.now()) + " days overdue.");
+                System.out.println("Total fine: " + fine.getAmount() + " HUF (" + ChronoUnit.DAYS.between(fine.getOverdueDate(), LocalDate.now()) + " days × 50 HUF/day)");
+            }
+            System.out.println();
+            if (confirm("Confirm return? (Y/N): ")) {
+                System.out.println();
+                System.out.println("✓ Book returned successfully.");
+                if (fine != null) {
+                    System.out.println("✓ Fine recorded: " + fine.getAmount() + " HUF");
+                }
+            } else {
+                System.out.println();
+                System.err.println("Return process terminated!\n");
+            }
+            waitForEnter("Press Enter to return to menu...");
+
+        }
+    }
+
+    private void searchBooks() {
+        clearScreen();
+        System.out.println(cyan("╔══════════════════════════════════════╗"));
+        System.out.println(cyan("║   SEARCH BOOKS                       ║"));
+        System.out.println(cyan("╚══════════════════════════════════════╝\n"));
+
+        System.out.println("Search by:");
+        System.out.println("1. Book ID");
+        System.out.println("2. Title");
+        System.out.println("3. Author");
+        System.out.println("4. Back to Main Menu\n");
+
+        int choice = readInt("Select search type (1-4): ");
+        System.out.println();
+
+        switch (choice) {
+            case 1:
+                searchById();
+                break;
+            case 2:
+                searchByTitle();
+                break;
+            case 3:
+                searchByAuthor();
+                break;
+            case 4:
+                return;
+            default:
+                System.out.println(red("Invalid choice!"));
+                waitForEnter("Press Enter to try again...");
+                searchBooks();
+        }
+    }
+
+    private void searchById() {
+        scanner.nextLine();
+        String bookId = readString("Enter Book ID (e.g., SF-042): ");
+        System.out.println();
+
+        try {
+            Book book = bookService.findBookById(bookId);
+            displaySearchResult(List.of(book));
+        } catch (InvalidBookIdException e) {
+            System.out.println(red("Book not found: " + bookId));
+            System.out.println();
+            waitForEnter("Press Enter to return to menu...");
+        }
+    }
+
+    private void searchByTitle() {
+        scanner.nextLine();
+        System.out.print("Enter title to search: ");
+        String title = scanner.nextLine().trim();
+        System.out.println();
+
+        List<Book> results = bookService.searchByTitle(title);
+
+        if (results.isEmpty()) {
+            System.out.println(yellow("No books found with title containing: \"" + title + "\""));
+        } else {
+            displaySearchResult(results);
         }
 
-        // TODO: Implement 3 methods
+        System.out.println();
+        waitForEnter("Press Enter to return to menu...");
+    }
+
+    private void searchByAuthor() {
+        scanner.nextLine();
+        System.out.print("Enter author name to search: ");
+        String author = scanner.nextLine().trim();
+        System.out.println();
+
+        List<Book> results = bookService.searchByAuthor(author);
+
+        if (results.isEmpty()) {
+            System.out.println(yellow("No books found by author: \"" + author + "\""));
+        } else {
+            displaySearchResult(results);
+        }
+
+        System.out.println();
+        waitForEnter("Press Enter to return to menu...");
+    }
+
+    private void displaySearchResult(List<Book> books) {
+        System.out.println(cyan("Search Results:"));
+        System.out.println(cyan("─────────────────────────────────────────\n"));
+
+        for (Book book : books) {
+            String status;
+            if (book.isAvailable()) {
+                status = green("[AVAILABLE]");
+            } else {
+                try {
+                    LocalDate returnDate = loanService.getExpectedReturnDate(book.getId());
+                    status = yellow("[LOANED until " + returnDate + "]");
+                } catch (InvalidBookIdException e) {
+                    status = yellow("[LOANED]");
+                }
+            }
+
+            System.out.println("[" + book.getId() + "] " + book.getTitle() + " by " + book.getAuthor());
+            System.out.println("         Category: " + book.getCategory() + " | Status: " + status);
+            System.out.println();
+        }
+    }
+
+    private void listFines() {
+        clearScreen();
+        System.out.println(cyan("╔══════════════════════════════════════╗"));
+        System.out.println(cyan("║   ACTIVE FINES                       ║"));
+        System.out.println(cyan("╚══════════════════════════════════════╝\n"));
+
+        List<Fine> allFines = loanService.getAllFines();
+
+        if (allFines.isEmpty()) {
+            System.out.println(green("No active fines! Everyone is on time! 🎉\n"));
+        } else {
+            System.out.printf("%-12s | %-20s | %-10s | %-10s | %-12s%n",
+                    "Member ID", "Member Name", "Book ID", "Days Late", "Fine Amount");
+            System.out.println("─────────────────────────────────────────────────────────────────────────");
+
+            int totalFines = 0;
+
+
+            allFines.sort((f1, f2) -> Integer.compare(f2.getAmount(), f1.getAmount()));
+
+            for (Fine fine : allFines) {
+                try {
+                    Member member = memberService.findMemberById(fine.getMemberId());
+                    long daysLate = ChronoUnit.DAYS.between(fine.getOverdueDate(), LocalDate.now());
+
+                    String fineAmount = fine.getAmount() + " HUF";
+
+                    // Piros színnel, ha nagy a büntetés (500+ HUF)
+                    if (fine.getAmount() >= 500) {
+                        System.out.printf("%-12s | %-20s | %-10s | %-10d | %s%n",
+                                fine.getMemberId(),
+                                truncate(member.getName(), 20),
+                                fine.getBookId(),
+                                daysLate,
+                                red(fineAmount));
+                    } else if (fine.getAmount() >= 250) {
+                        System.out.printf("%-12s | %-20s | %-10s | %-10d | %s%n",
+                                fine.getMemberId(),
+                                truncate(member.getName(), 20),
+                                fine.getBookId(),
+                                daysLate,
+                                yellow(fineAmount));
+                    } else {
+                        System.out.printf("%-12s | %-20s | %-10s | %-10d | %-12s%n",
+                                fine.getMemberId(),
+                                truncate(member.getName(), 20),
+                                fine.getBookId(),
+                                daysLate,
+                                fineAmount);
+                    }
+
+                    totalFines += fine.getAmount();
+
+                } catch (InvalidMemberException e) {
+                    System.err.println("Warning: Member not found for fine: " + fine.getMemberId());
+                }
+            }
+
+            System.out.println("─────────────────────────────────────────────────────────────────────────");
+            System.out.printf("%67s | %s%n", "TOTAL", red(bold(totalFines + " HUF")));
+            System.out.println();
+        }
+
+        waitForEnter("Press Enter to return to menu...");
+    }
+
+    private void showStatistics() {
+        clearScreen();
+        System.out.println(cyan("╔══════════════════════════════════════╗"));
+        System.out.println(cyan("║   LIBRARY STATISTICS                 ║"));
+        System.out.println(cyan("╚══════════════════════════════════════╝\n"));
+
+
+        var popularCategory = loanService.getMostPopularCategory();
+        if (popularCategory != null) {
+            System.out.println("📊 " + bold("Most Popular Category:"));
+            System.out.println("   " + green(popularCategory.getKey() + " (" + popularCategory.getValue() + " loans)"));
+            System.out.println();
+        } else {
+            System.out.println("📊 " + bold("Most Popular Category:"));
+            System.out.println("   " + yellow("No loans recorded yet"));
+            System.out.println();
+        }
+
+
+        var lateMember = loanService.getMostFrequentlyLateMember();
+        if (lateMember != null) {
+            try {
+                Member member = memberService.findMemberById(lateMember.getKey());
+                System.out.println("⏰ " + bold("Most Frequently Late Member:"));
+                System.out.println("   " + red(member.getName() + " (ID: " + member.getMemberId() + ")"));
+                System.out.println("   " + lateMember.getValue() + " late returns");
+                System.out.println();
+            } catch (InvalidMemberException e) {
+                System.out.println("⏰ " + bold("Most Frequently Late Member:"));
+                System.out.println("   " + yellow("Data unavailable"));
+                System.out.println();
+            }
+        } else {
+            System.out.println("⏰ " + bold("Most Frequently Late Member:"));
+            System.out.println("   " + green("No late returns! Everyone is on time! 🎉"));
+            System.out.println();
+        }
+
+        System.out.println(cyan("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
+        System.out.println();
+        System.out.println(bold("Additional Information:"));
+
+        int totalBooks = bookService.getAllBooks().size();
+        System.out.println("• Total books in inventory: " + totalBooks);
+
+        int activeLoans = loanService.getAllLoans().size();
+        System.out.println("• Currently loaned books: " + activeLoans);
+
+        int totalMembers = memberService.getAllMembers().size();
+        System.out.println("• Total registered members: " + totalMembers);
+
+        int totalFines = loanService.getTotalFinesAmount();
+        if (totalFines > 0) {
+            System.out.println("• Total outstanding fines: " + red(totalFines + " HUF"));
+        } else {
+            System.out.println("• Total outstanding fines: " + green("0 HUF"));
+        }
+
+        System.out.println();
+        System.out.println(bold("Loans by Category:"));
+        String[] categories = {"Sci-fi", "Drama", "History", "Children", "Technical"};
+        for (String category : categories) {
+            int count = loanService.getCategoryLoanCount(category);
+            System.out.printf("  %-12s: %d loans%n", category, count);
+        }
+
+        System.out.println();
+        waitForEnter("Press Enter to return to menu...");
+    }
+
+    private String truncate(String text, int maxLength) {
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        return text.substring(0, maxLength - 3) + "...";
+    }
+
+    private String bold(String text) {
+        return BOLD + text + RESET;
+    }
+
+    private String getBookStatus(Book book) {
+        if (book.isAvailable()) {
+            return green("AVAILABLE");
+        } else {
+            try {
+                LocalDate returnDate = loanService.getExpectedReturnDate(book.getId());
+                return yellow("LOANED until " + returnDate);
+            } catch (InvalidBookIdException e) {
+                return yellow("LOANED");
+            }
+        }
     }
 }

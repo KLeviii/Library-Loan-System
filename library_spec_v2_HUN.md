@@ -763,7 +763,7 @@ Active loans for John Doe:
          Loaned: 2025-11-20 | Due: 2025-12-18
          ✓ On time (17 days remaining)
 
-Enter Book ID to return: SF-005
+Enter a valid Book ID to return: SF-005
 
 ⚠ FINE NOTICE
 Book is 33 days overdue.

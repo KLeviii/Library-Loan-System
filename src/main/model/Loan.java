@@ -7,7 +7,7 @@ public class Loan {
     private final String bookId;
     private final String memberId;
     private final LocalDate loanDate;
-    private final LocalDate dueDate;
+    private LocalDate dueDate;
 
     public Loan(String bookId, String memberId, LocalDate loanDate, int loanDuration) {
         this.bookId = bookId;
@@ -40,5 +40,9 @@ public class Loan {
     }
     public LocalDate getDueDate() {
         return dueDate;
+    }
+
+    public void recalculateDueDate(int correctLoanDuration) {
+        this.dueDate = this.loanDate.plusDays(correctLoanDuration);
     }
 }

@@ -1,82 +1,48 @@
 package main;
 
-import main.exception.InvalidNumberInputExceptionAtUserInterface;
-import main.ui.MenuUI;
-
-import java.util.Scanner;
+import main.service.*;
+import main.ui.*;
+import main.exception.*;
+import main.model.*;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        try {
+            System.out.println("Loading library data...\n");
 
-        String RESET = "\u001B[0m";
-        String RED = "\u001B[31m";
-        String YELLOW = "\u001B[33m";
-        String CYAN = "\u001B[36m";
-        String BLUE = "\u001B[34m";
-        String GREEN = "\u001B[32m";
+            // 1. FileService inicializálás
+            FileService fileService = new FileService();
 
-        MenuUI display = new MenuUI();
-        display.println("╔══════════════════════════════╗");
-        display.println("║"+YELLOW+"LIBRARY LOAN SYSTEM"+RESET+"           ║");
-        display.println("╚══════════════════════════════╝");
-        boolean run = true;
-        Scanner sc = new Scanner(System.in);
+            // 2. Adatok betöltése fájlokból
+            List<Book> books = fileService.loadBooks();
+            List<Member> members = fileService.loadMembers();
+            List<Loan> loans = fileService.loadLoans();
+            List<Fine> fines = fileService.loadFines();
 
-        while (run) {
-            try {
-                display.println("┋");
-                display.println("╔══════════════════════════════╗");
-                display.println("║"+YELLOW+"OPTIONS:"+RESET+"                      ║");
-                display.println("║"+GREEN+ "1. Loan a book"+RESET+"                ║");
-                display.println("║"+BLUE+ "2. Give back a book"+RESET+"           ║");
-                display.println("║"+CYAN+ "3. Statistics"+RESET+"                 ║");
-                display.println("║"+RED+ "0. Exit"+RESET+"                       ║");
-                display.println("╚══════════════════════════════╝");
-                display.print("┋ Action: ");
-                int action = Integer.parseInt(sc.nextLine());
-                switch (action) {
-                    case 0:
-                        run = false;
-                        break;
-                    case 1:
-                        display.println("╔══════════════════════════════╗");
-                        display.println("║"+YELLOW+"BOOK LOANING"+RESET+"                  ║");
-                        display.println("╚══════════════════════════════╝");
-                        display.println("┋");
-                        display.println("╔══════════════════════════════╗");
-                        display.println("║"+YELLOW+" PLEASE ENTER YOUR MEMBER ID"+RESET+  "  ║");
-                        display.println("║"+YELLOW+" ENTER \"0\" to go back..."+RESET+"      ║");
-                        display.println("╚══════════════════════════════╝");
-                        break;
-                    case 2:
-                        display.println("╔══════════════════════════════╗");
-                        display.println("║"+YELLOW+"GIVE BACK A BOOK"+RESET+"              ║");
-                        display.println("╚══════════════════════════════╝");
-                        display.println("┋");
-                        display.println("╔══════════════════════════════╗");
-                        display.println("║"+YELLOW+" PLEASE ENTER YOUR MEMBER ID"+RESET+  "  ║");
-                        display.println("║"+YELLOW+" ENTER \"0\" to go back..."+RESET+"      ║");
-                        display.println("╚══════════════════════════════╝");
-                        break;
-                    case 3:
-                        display.println("╔══════════════════════════════╗");
-                        display.println("║"+YELLOW+"STATISTICS"+RESET+"                  ║");
-                        display.println("╚══════════════════════════════╝");
-                        break;
-                    default:
-                        throw new InvalidNumberInputExceptionAtUserInterface("Invalid number, try  again with 1,2 or 3");
-                }
-            } catch (InvalidNumberInputExceptionAtUserInterface inieaui) {
-                display.println("╔═══════════════════════════════════════════════════╗");
-                display.println("║"+RED+"ERROR: "+inieaui.getMessage()+RESET+"    ║");
-                display.println("╚═══════════════════════════════════════════════════╝");
-            } catch (NumberFormatException nfe) {
-                display.println(RED+"ERROR: " + nfe.getMessage() +RESET);
-            }
+            // 3. Kölcsönzési időtartamok javítása
+            fileService.fixLoanDurations(loans, books);
 
-            display.print("┋ Action: ");
+            // 4. Service-k inicializálása
+            BookService bookService = new BookService(books);
+            MemberService memberService = new MemberService(members);
+            LoanService loanService = new LoanService(loans, fines, bookService, memberService);
 
+            System.out.println("Library system initialized successfully!\n");
+
+            // 5. UI indítása
+            MenuUI menu = new MenuUI(bookService, memberService, loanService, fileService);
+            menu.start();
+
+            // 6. Kilépéskor mentés
+            System.out.println("\nSaving data...");
+            fileService.saveAll(books, members, loans, fines);
+            System.out.println("Data saved. Goodbye!");
+
+        } catch (FileOperationException e) {
+            System.err.println("Fatal error: " + e.getMessage());
+            System.err.println("The program will now exit.");
+            System.exit(1);
         }
     }
 }
-
