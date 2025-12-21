@@ -19,14 +19,14 @@ public class BookService {
 
     public Book findBookById(String id) throws InvalidBookIdException {
         return books.stream()
-                .filter(b -> b.getId().equals(id))
+                .filter(b -> b.getId().equalsIgnoreCase(id))
                 .findFirst()
                 .orElseThrow(() -> new InvalidBookIdException("Book not found: " + id));
     }
 
     public boolean bookExists(String bookId) {
         return books.stream()
-                .anyMatch(m -> m.getId().equals(bookId));
+                .anyMatch(m -> m.getId().equalsIgnoreCase(bookId));
     }
 
     public List<Book> getBooksByCategory(String category) {

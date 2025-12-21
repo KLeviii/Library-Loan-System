@@ -12,16 +12,16 @@ public class Member {
     private List<String> loanedBookIds;
 
 
-    public Member(String name, String memberId, int loanedBooks, List<String> loanedBookIds) {
-        this.name = name;
+    public Member(String memberId, String name, int loanedBooks, List<String> loanedBookIds) {
         this.memberId = memberId;
+        this.name = name;
         setLoanedBooks(loanedBooks);
         this.loanedBookIds = loanedBookIds;
     }
 
-    public Member(String name, String memberId) {
-        this.name = name;
+    public Member(String memberId, String name) {
         this.memberId = memberId;
+        this.name = name;
         setLoanedBooks(0);
         this.loanedBookIds = new ArrayList<>();
     }

@@ -207,7 +207,7 @@ public class MenuUI {
             System.out.println();
             System.err.println("Invalid book or member ID!");
             loanBook();
-        } else if (memberService.canMemberLoan(memberIdInput)) {
+        } else if (!memberService.canMemberLoan(memberIdInput)) {
             System.out.println();
             System.err.println("This member may not loan any more books!");
             loanBook();

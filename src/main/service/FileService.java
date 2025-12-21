@@ -184,9 +184,6 @@ public class FileService {
         return null;
     }
 
-    /**
-     * Tagok betöltése
-     */
     public List<Member> loadMembers() throws FileOperationException {
         List<Member> members = new ArrayList<>();
         Path path = Paths.get(MEMBERS_FILE);
