@@ -1,5 +1,6 @@
 package main.ui;
 
+import main.exception.FileOperationException;
 import main.exception.InvalidBookIdException;
 import main.exception.InvalidMemberException;
 import main.model.Book;
@@ -227,6 +228,7 @@ public class MenuUI {
                     Loan loan = loanService.loanBook(bookIdInput, memberIdInput);
                     System.out.println("\nBook successfully loaned!");
                     System.out.println("Due date: " + loan.getDueDate());
+                    saveData();
                 } catch (InvalidBookIdException | InvalidMemberException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -293,6 +295,8 @@ public class MenuUI {
                 if (fine != null) {
                     System.out.println("✓ Fine recorded: " + fine.getAmount() + " HUF");
                 }
+
+                saveData();
             } else {
                 System.out.println();
                 System.err.println("Return process terminated!\n");
@@ -337,7 +341,6 @@ public class MenuUI {
     }
 
     private void searchById() {
-        scanner.nextLine();
         String bookId = readString("Enter Book ID (e.g., SF-042): ");
         System.out.println();
 
@@ -352,7 +355,6 @@ public class MenuUI {
     }
 
     private void searchByTitle() {
-        scanner.nextLine();
         System.out.print("Enter title to search: ");
         String title = scanner.nextLine().trim();
         System.out.println();
@@ -370,7 +372,6 @@ public class MenuUI {
     }
 
     private void searchByAuthor() {
-        scanner.nextLine();
         System.out.print("Enter author name to search: ");
         String author = scanner.nextLine().trim();
         System.out.println();
@@ -567,6 +568,42 @@ public class MenuUI {
             } catch (InvalidBookIdException e) {
                 return yellow("LOANED");
             }
+        }
+    }
+
+    private void createNewMember() {
+        clearScreen();
+        System.out.println(cyan("╔══════════════════════════════════════╗"));
+        System.out.println(cyan("║   CREATE NEW MEMBER                  ║"));
+        System.out.println(cyan("╚══════════════════════════════════════╝\n"));
+
+        String name = readString("Enter member name: ");
+
+        try {
+            Member newMember = memberService.createMember(name);
+            System.out.println(green("\n✓ Membership created successfully!"));
+            System.out.println("Member ID: " + newMember.getMemberId());
+            System.out.println("Name: " + newMember.getName());
+
+            saveData();
+
+        } catch (InvalidMemberException e) {
+            System.err.println(red("\nError: " + e.getMessage()));
+        }
+
+        waitForEnter("\nPress Enter to return to menu...");
+    }
+
+    private void saveData() {
+        try {
+            fileService.saveAll(
+                    bookService.getAllBooks(),
+                    memberService.getAllMembers(),
+                    loanService.getAllLoans(),
+                    loanService.getAllFines()
+            );
+        } catch (FileOperationException e) {
+            System.err.println(red("Warning: Failed to save data - " + e.getMessage()));
         }
     }
 }
