@@ -246,18 +246,19 @@ public class MenuUI {
         System.out.println(cyan("║   RETURN A BOOK                      ║"));
         System.out.println(cyan("╚══════════════════════════════════════╝\n"));
         String memberIdInput = readString("Enter Member ID: ");
-        System.out.println();
-        System.out.println("Active loans for " + memberService.findMemberById(memberIdInput).getName() + ":\n");
+
 
         if (!memberService.memberExists(memberIdInput)) {
             System.out.println();
             System.err.println("Invalid member ID!");
-            returnBook();
-        } else if (memberService.getMemberLoanCount(memberIdInput) == 0) {
+            System.out.println();
+        } else if (memberService.getMemberLoanCount(memberIdInput) == 1) {
             System.out.println();
             System.err.println("This member does not have any books loaned!");
-            loanBook();
+            System.out.println();
         } else {
+            System.out.println();
+            System.out.println("Active loans for " + memberService.findMemberById(memberIdInput).getName() + ":\n");
             Member member = memberService.findMemberById(memberIdInput);
             try {
                 System.out.println();
