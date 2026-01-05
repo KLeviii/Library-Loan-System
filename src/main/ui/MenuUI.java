@@ -140,7 +140,7 @@ public class MenuUI {
                 listTechBooks();
                 break;
             case 6:
-                displayMainMenu();
+                break;
         }
     }
 
