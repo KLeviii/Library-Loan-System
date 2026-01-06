@@ -180,7 +180,7 @@ main.model.Member ID | main.model.Member Name | main.model.Book ID | Days Overdu
 **Megjelenítendő Statisztikák:**
 
 1. **Legnépszerűbb Kategória**
-   - Mérőszám: Összes kölcsönzések száma (minden idők) kategóriánként
+   - Mérőszám: Összes kölcsönzések száma kategóriánként
    - Megjelenítés: Kategória név és kölcsönzések száma
    - Példa:  "Most Popular Category: Sci-fi (142 loans)"
 
@@ -402,6 +402,7 @@ public class Fine {
     public String getBookId() { ... }
     public int getAmount() { ... }
     public void setAmount(int amount) { ... }
+   public LocalDate getOverdueDate() { ... }
 }
 ```
 
@@ -464,6 +465,7 @@ TC-003;Clean Code;Robert C. Martin
 - Pontosvessző (;) elválasztó
 - Nincs lezáró pontosvessző
 - UTF-8 kódolás
+- A kölcsönzött könyvek szinkronizálását és nyílvántartását a loanedBooks adatszerkezeten keresztül kell végezni
 
 ---
 
@@ -484,6 +486,7 @@ HS-012;000042;2025-11-15
 - Pontosvessző (;) elválasztó
 - Nincs lezáró pontosvessző
 - Csak aktív kölcsönzések (visszahozott könyvek törlődnek)
+- Az adatok szinkronizálására külön gondot kell fordítani
 
 ---
 
@@ -499,7 +502,7 @@ HS-012;000042;2025-11-15
 **Szabályok:**
 - Összeg forintban (egész szám)
 - Késedelmes dátum az a nap, amikor a könyv késedelmessé vált (határidő + 1 nap)
-- Büntetések megmaradnak kifizetésig/törölésig
+- Büntetések megmaradnak törlésig
 - Könyv azonosító számrésze nullával kitöltve 3 számjegyig
 - Egy büntetés soronként könyvenként
 - Pontosvessző (;) elválasztó
@@ -1022,6 +1025,7 @@ src/
 ---
 
 ## Dokumentum Verzió
-- **Verzió:** 2.1
-- **Dátum:** 2025-12-02
-- **Státusz:** Tesztelésre vár
+- **Verzió:** 2.2
+- **Dátum:** 2026-01-04
+- **Státusz:** Tesztelve 2026.01.05
+- **MI Használat:** A kezdeti tervek és irányvonalak nyomán a specifikáció írást nagymértékben a Claude AI-jal végeztük.
