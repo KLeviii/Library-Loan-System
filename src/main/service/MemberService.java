@@ -58,7 +58,7 @@ public class MemberService {
         }
 
         String memberId = String.format("%06d", nextMemberId);
-        Member newMember = new Member(name, memberId);
+        Member newMember = new Member(memberId,name);
 
         members.add(newMember);
         nextMemberId++;

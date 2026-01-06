@@ -76,7 +76,7 @@ public class Member {
     }
 
     public void decrementLoans() {
-        if (loanedBooks > 0) loanedBooks++;
+        if (loanedBooks > 0) loanedBooks--;
 
     }
 

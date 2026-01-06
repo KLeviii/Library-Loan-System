@@ -250,38 +250,45 @@ public class MenuUI {
 
         if (!memberService.memberExists(memberIdInput)) {
             System.out.println();
-            System.err.println("Invalid member ID!");
+            System.err.println("Invalid member ID!\n");
             System.out.println();
-        } else if (memberService.getMemberLoanCount(memberIdInput) == 1) {
+            waitForEnter("Press Enter to return to menu...");
+            return;
+        } else if (memberService.getMemberLoanCount(memberIdInput) == 0) {
             System.out.println();
-            System.err.println("This member does not have any books loaned!");
+            System.err.println("This member does not have any books loaned!\n");
             System.out.println();
-        } else {
-            System.out.println();
-            System.out.println("Active loans for " + memberService.findMemberById(memberIdInput).getName() + ":\n");
-            Member member = memberService.findMemberById(memberIdInput);
-            try {
-                System.out.println();
-                int index = 0;
-                for (Book loanedBook : memberService.getMemberLoanedBooks(memberIdInput, bookService)) {
-                    Loan currentLoan = loanService.getMemberLoans(memberIdInput).get(index);
-                    System.out.println("[" + loanedBook.getId() + "] " + loanedBook.getTitle());
-                    System.out.println("         Loaned: " + currentLoan.getLoanDate() + " | Due: " + currentLoan.getDueDate());
-                    if (currentLoan.isOverdue()) {
-                        System.out.println("         ⚠ OVERDUE: " + currentLoan.getDaysOverdue() + " days | Fine: " + currentLoan.calculateFine() + " HUF\n");
-                    } else {
-                        System.out.println("         ✓ On time (" + ChronoUnit.DAYS.between(LocalDate.now(), currentLoan.getDueDate()) + " days remaining)\n");
-                    }
-                    index++;
+            waitForEnter("Press Enter to return to menu...");
+            return;
+        }
+        System.out.println();
+        Member member = memberService.findMemberById(memberIdInput);
+        System.out.println("Active loans for " + member.getName() + ":\n");
+        try {
+            int index = 0;
+            for (Book loanedBook : memberService.getMemberLoanedBooks(memberIdInput, bookService)) {
+                Loan currentLoan = loanService.getMemberLoans(memberIdInput).get(index);
+                System.out.println("[" + loanedBook.getId() + "] " + loanedBook.getTitle());
+                System.out.println("         Loaned: " + currentLoan.getLoanDate() + " | Due: " + currentLoan.getDueDate());
+                if (currentLoan.isOverdue()) {
+                    System.out.println("         ⚠ OVERDUE: " + currentLoan.getDaysOverdue() + " days | Fine: " + currentLoan.calculateFine() + " HUF\n");
+                } else {
+                    System.out.println("         ✓ On time (" + ChronoUnit.DAYS.between(LocalDate.now(), currentLoan.getDueDate()) + " days remaining)\n");
                 }
-            } catch (InvalidMemberException e) {
-                System.err.println("Error: " + e.getMessage());
+                index++;
             }
+        } catch (InvalidMemberException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
 
-            String bookToReturn;
-            do {
-                bookToReturn = readString("Enter a valid Book ID to return: ");
-            } while (!member.hasLoanedBook(bookToReturn));
+        String bookToReturn;
+        do {
+            bookToReturn = readString("Enter a valid Book ID to return: ");
+            if (!member.hasLoanedBook(bookToReturn)) {
+                System.out.println(red("Invalid Book ID or you haven't loaned this book!"));
+            }
+        } while (!member.hasLoanedBook(bookToReturn));
+        try {
             Fine fine = loanService.returnBook(bookToReturn, memberIdInput);
             System.out.println();
             if (fine != null) {
@@ -302,9 +309,12 @@ public class MenuUI {
                 System.out.println();
                 System.err.println("Return process terminated!\n");
             }
-            waitForEnter("Press Enter to return to menu...");
 
+        } catch (InvalidBookIdException | InvalidMemberException e) {
+            System.err.println(red("Error: " + e.getMessage()));
         }
+        waitForEnter("Press Enter to return to menu...");
+
     }
 
     private void searchBooks() {
