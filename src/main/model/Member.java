@@ -55,6 +55,11 @@ public class Member {
         }
     }
 
+    public void resetLoanState() {
+        this.loanedBookIds.clear();
+        this.loanedBooks = 0;
+    }
+
     public void removeLoanedBook(String bookId) {
         loanedBookIds.remove(bookId);
     }

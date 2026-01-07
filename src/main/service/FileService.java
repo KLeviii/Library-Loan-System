@@ -313,15 +313,11 @@ public class FileService {
         return fines;
     }
 
-    /**
-     * Kölcsönzési időtartamok javítása a könyvek alapján
-     * Ezt a Main-ben kell hívni a betöltés után
-     */
+
     public void fixLoanDurations(List<Loan> loans, List<Book> books) {
         for (Loan loan : loans) {
             for (Book book : books) {
                 if (book.getId().equals(loan.getBookId())) {
-                    // Újraszámítjuk a határidőt a helyes időtartammal
                     int correctDuration = book.getLoanDuration();
                     loan.recalculateDueDate(correctDuration);
                     break;

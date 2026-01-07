@@ -37,6 +37,10 @@ public class Main {
             System.err.println("Fatal error: " + e.getMessage());
             System.err.println("The program will now exit.");
             System.exit(1);
+        } catch (Exception e) {
+            System.err.println("Unexpected error occurred!");
+            System.err.println("The program will now exit.");
+            System.exit(1);
         }
     }
 }

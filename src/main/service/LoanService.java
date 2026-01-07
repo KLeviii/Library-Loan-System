@@ -32,12 +32,17 @@ public class LoanService {
             book.setLoanedTo(null);
         }
 
+        for (Member member : memberService.getAllMembers()) {
+            member.resetLoanState();
+        }
+
         for (Loan loan : loans) {
             try {
                 Book book = bookService.findBookById(loan.getBookId());
                 book.setLoanedTo(loan.getMemberId());
 
                 Member member = memberService.findMemberById(loan.getMemberId());
+                member.addLoanedBook(loan.getBookId());
                 member.incrementLoans();
             } catch (InvalidBookIdException | InvalidMemberException e) {
                 System.err.println("Warning: " + e.getMessage());

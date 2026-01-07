@@ -288,8 +288,27 @@ public class MenuUI {
                 System.out.println(red("Invalid Book ID or you haven't loaned this book!"));
             }
         } while (!member.hasLoanedBook(bookToReturn));
+        final String finalBookToReturn = bookToReturn;
+
         try {
-            Fine fine = loanService.returnBook(bookToReturn, memberIdInput);
+            Loan loan = loanService.getMemberLoans(memberIdInput).stream()
+                    .filter(l -> l.getBookId().equals(finalBookToReturn))
+                    .findFirst()
+                    .orElse(null);
+
+            if (loan == null) {
+                System.err.println(red("Error: Loan not found!"));
+                waitForEnter("Press Enter to return to menu...");
+                return;
+            }
+
+            Fine fine = null;
+            if (loan.isOverdue()) {
+                int daysOverdue = loan.getDaysOverdue();
+                int fineAmount = loan.calculateFine();
+                fine = new Fine(memberIdInput, finalBookToReturn, loan.getDueDate().plusDays(1), fineAmount);
+            }
+
             System.out.println();
             if (fine != null) {
                 System.out.println("⚠ FINE NOTICE");
@@ -297,17 +316,21 @@ public class MenuUI {
                 System.out.println("Total fine: " + fine.getAmount() + " HUF (" + ChronoUnit.DAYS.between(fine.getOverdueDate(), LocalDate.now()) + " days × 50 HUF/day)");
             }
             System.out.println();
+
             if (confirm("Confirm return? (Y/N): ")) {
+
+                Fine confirmedFine = loanService.returnBook(finalBookToReturn, memberIdInput);
+
                 System.out.println();
                 System.out.println("✓ Book returned successfully.");
-                if (fine != null) {
-                    System.out.println("✓ Fine recorded: " + fine.getAmount() + " HUF");
+                if (confirmedFine != null) {
+                    System.out.println("✓ Fine recorded: " + confirmedFine.getAmount() + " HUF");
                 }
-
                 saveData();
             } else {
                 System.out.println();
                 System.err.println("Return process terminated!\n");
+                System.out.println();
             }
 
         } catch (InvalidBookIdException | InvalidMemberException e) {
