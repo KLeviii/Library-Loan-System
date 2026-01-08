@@ -8,8 +8,7 @@
 5. [Fájlformátumok és Adatmegőrzés](#5-fájlformátumok-és-adatmegőrzés)
 6. [Kivételkezelés](#6-kivételkezelés)
 7. [Felhasználói Felület](#7-felhasználói-felület)
-8. [További Funkciók](#8-további-funkciók)
-9. [Tesztelési Követelmények](#9-tesztelési-követelmények)
+8. [Tesztelési Követelmények](#9-tesztelési-követelmények)
 
 ---
 
@@ -828,33 +827,9 @@ Press Enter to return to menu...
 
 ---
 
-## 8. További Funkciók
+## 8. Tesztelési Követelmények
 
-### 8.1 Funkció Hely #1
-**[Fenntartva további funkcióhoz - később kerül meghatározásra]**
-
-Lehetséges funkciók:
-- Könyv előjegyzés (várólistázás)
-- Email értesítések a határidőkről
-- Napi könyvajánló
-- Integrált mini-játékok (pl. Wordle, Akasztófa)
-
----
-
-### 8.2 Funkció Hely #2
-**[Fenntartva további funkcióhoz - később kerül meghatározásra]**
-
-Lehetséges funkciók:
-- Külső API integráció (NASA, NYT, stb.)
-- Kölcsönzési előzmények exportálása
-- Tag aktivitási jelentések
-- Könyv értékelési rendszer
-
----
-
-## 9. Tesztelési Követelmények
-
-### 9.1 Egység Tesztelés (Unit Testing)
+### 8.1 Egység Tesztelés (Unit Testing)
 
 **Tesztelendő Osztályok:**
 - `main.model.Book` és minden alosztály (main.model.SciFi, main.model.Drama, stb.)
@@ -886,7 +861,7 @@ Lehetséges funkciók:
 
 ---
 
-### 9.2 Integrációs Tesztelés
+### 8.2 Integrációs Tesztelés
 
 **Fájlműveletek:**
 - Összes adatfájl sikeres betöltése indításkor
@@ -906,7 +881,7 @@ Lehetséges funkciók:
 
 ---
 
-### 9.3 Minta Teszt Adatok
+### 8.3 Minta Teszt Adatok
 
 **Hozd létre ezeket a teszt fájlokat a `data/` könyvtárban:**
 
@@ -940,7 +915,7 @@ DR-001;000001;2025-11-15
 
 ---
 
-### 9.4 Szélsőséges Esetek Tesztelése
+### 8.4 Szélsőséges Esetek Tesztelése
 
 1. **Tag pontosan 3 kölcsönzéssel próbál egy 4.-et kölcsönözni**
 2. **Könyv visszahozása pontosan a határidőn (0 büntetés legyen)**
@@ -955,15 +930,15 @@ DR-001;000001;2025-11-15
 
 ---
 
-## 10. Implementációs Jegyzetek
+## 9. Implementációs Jegyzetek
 
-### 10.1 Ajánlott Könyvtárak
+### 9.1 Ajánlott Könyvtárak
 - **Dátum/Idő:** `java.time.LocalDate` (beépített, JDK 21)
 - **Fájl I/O:** `java.nio.file.Files` (beépített)
 - **Kollekciók:** `java.util.ArrayList`, `java.util.HashMap` (beépített)
 - **ANSI Színek:** Egyedi segédosztály implementálása vagy külső könyvtár használata (pl. Jansi)
 
-### 10.2 Kód Organizáció
+### 9.2 Kód Organizáció
 ```
 src/
 ├── main/
@@ -999,7 +974,7 @@ src/
     └── [Egység tesztek tükrözik a src struktúrát]
 ```
 
-### 10.3 Legjobb Gyakorlatok
+### 9.3 Legjobb Gyakorlatok
 - Használj beszédes változó- és metódusneveket
 - Adj hozzá JavaDoc kommenteket minden nyilvános metódushoz
 - Kövesd a Java elnevezési konvenciókat (camelCase változókhoz, PascalCase osztályokhoz)
@@ -1010,7 +985,7 @@ src/
 
 ---
 
-## 11. Szójegyzék
+## 10. Szójegyzék
 
 | Kifejezés | Meghatározás |
 |------|------------|
@@ -1025,7 +1000,7 @@ src/
 ---
 
 ## Dokumentum Verzió
-- **Verzió:** 2.2
+- **Verzió:** 2.3
 - **Dátum:** 2026-01-04
 - **Státusz:** Tesztelve 2026.01.05
 - **MI Használat:** A kezdeti tervek és irányvonalak nyomán a specifikáció írást nagymértékben a Claude AI-jal végeztük.
