@@ -32,12 +32,15 @@ public class Loan {
     public String getBookId() {
         return bookId;
     }
+
     public String getMemberId() {
         return memberId;
     }
+
     public LocalDate getLoanDate() {
         return loanDate;
     }
+
     public LocalDate getDueDate() {
         return dueDate;
     }

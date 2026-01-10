@@ -18,15 +18,19 @@ public class Fine {
     public String getMemberId() {
         return memberId;
     }
+
     public String getBookId() {
         return bookId;
     }
+
     public LocalDate getOverdueDate() {
         return overdueDate;
     }
+
     public int getAmount() {
         return amount;
     }
+
     public void setAmount(int amount) {
         this.amount = amount;
     }
