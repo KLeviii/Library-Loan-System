@@ -1,6 +1,8 @@
 /**
  * AI:
  * regex
+ * .stream().*
+ *
  */
 
 package main.service;
